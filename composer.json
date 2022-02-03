@@ -1,0 +1,25 @@
+{
+  "name": "tumugin/potapota",
+  "type": "project",
+  "require": {
+    "tumugin/stannum": "0.1.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Tumugin\\Potapota\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tumugin\\Potapota\\Test": "test/"
+    }
+  },
+  "authors": [
+    {
+      "name": "myskng",
+      "email": "myskng@myskng.xyz"
+    }
+  ],
+  "minimum-stability": "dev"
+}
