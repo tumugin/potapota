@@ -9,7 +9,6 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
-
 use Tumugin\Potapota\Console\Main;
 use Tumugin\Potapota\Logger\LoggerSettings;
 use function DI\autowire;
