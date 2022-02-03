@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Logger;
 
 use Bramus\Monolog\Formatter\ColoredLineFormatter;
+use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
@@ -19,14 +20,13 @@ class LoggerSettings
 
     public function setup(): void
     {
-        $stdoutHandler = new StreamHandler('php://stdout', Logger::DEBUG);
-        $stderrHandler = new StreamHandler('php://stderr', Logger::WARNING);
+        $stdoutHandler = new StreamHandler('php://stderr', Logger::DEBUG);
 
         $colorLineFormatter = new ColoredLineFormatter();
         $stdoutHandler->setFormatter($colorLineFormatter);
-        $stderrHandler->setFormatter($colorLineFormatter);
 
         $this->logger->pushHandler($stdoutHandler);
-        $this->logger->pushHandler($stderrHandler);
+
+        ErrorHandler::register($this->logger);
     }
 }
