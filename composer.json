@@ -2,6 +2,7 @@
   "name": "tumugin/potapota",
   "type": "project",
   "require": {
+    "php": "^8.1",
     "tumugin/stannum": "0.1.0",
     "howyi/clickup-php": "^1.0",
     "team-reflex/discord-php": "^6.0",
@@ -9,7 +10,8 @@
     "symfony/dotenv": "^6.0",
     "php-di/php-di": "^6.3",
     "monolog/monolog": "^2.3",
-    "bramus/monolog-colored-line-formatter": "^3.0"
+    "bramus/monolog-colored-line-formatter": "^3.0",
+    "nesbot/carbon": "^2.56"
   },
   "license": "MIT",
   "autoload": {
