@@ -21,7 +21,9 @@ RUN apt-get update && \
   localedef -f UTF-8 -i en_US en_US.UTF-8 && \
   docker-php-ext-install intl bcmath zip && \
   composer config -g process-timeout 3600 && \
-  composer config -g repos.packagist composer https://packagist.org
+  composer config -g repos.packagist composer https://packagist.org && \
+  pecl install xdebug && \
+  docker-php-ext-enable xdebug
 
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
