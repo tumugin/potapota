@@ -6,5 +6,5 @@ namespace Tumugin\Potapota\Domain\ClickUp;
 
 interface ClickUpTaskRepository
 {
-    public function createClickUpTask(ClickUpDraftTask $clickUpDraftTask): void;
+    public function createClickUpTask(ClickUpDraftTask $clickUpDraftTask): ClickUpTask;
 }
