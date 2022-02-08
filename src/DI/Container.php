@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\DI;
 
+use ClickUp\Client as ClickUpClient;
 use DI\ContainerBuilder;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
 use Tumugin\Potapota\Console\Main;
+use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageRepository;
@@ -43,7 +45,12 @@ class Container
             Logger::class => get(LoggerInterface::class),
             Main::class => autowire(Main::class),
             LoggerSettings::class => autowire(LoggerSettings::class),
+            ClickUpClient::class => fn(ApplicationSettings $applicationSettings) => new ClickUpClient(
+                $applicationSettings->getClickUpAPIToken()->toString()
+            ),
             // Domain
+            ApplicationSettings::class => fn(ApplicationSettingsRepository $applicationSettingsRepository
+            ) => $applicationSettingsRepository->getApplicationSettings(),
             MessageEventRepository::class => autowire(MessageEventRepository::class),
             ClickUpTaskRepository::class => autowire(ClickUpTaskRepositoryImpl::class),
             DiscordMessageRepository::class => autowire(DiscordMessageRepositoryImpl::class),

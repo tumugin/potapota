@@ -4,13 +4,32 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Infra\ClickUp\Repository;
 
+use ClickUp\Client;
+use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 
 class ClickUpTaskRepositoryImpl implements ClickUpTaskRepository
 {
+    private Client $client;
+    private ApplicationSettings $applicationSettings;
+
+    public function __construct(Client $client, ApplicationSettings $applicationSettings)
+    {
+        $this->client = $client;
+        $this->applicationSettings = $applicationSettings;
+    }
+
     public function createClickUpTask(ClickUpDraftTask $clickUpDraftTask): void
     {
-        // TODO: Implement createClickUpTask() method.
+        $team = $this->client->team($this->applicationSettings->getClickUpTeamId()->toString());
+        $space = $team->space($this->applicationSettings->getClickUpSpaceId()->toString());
+        $project = $space->project($this->applicationSettings->getClickUpProjectId()->toString());
+        $taskList = $project->taskList($this->applicationSettings->getClickUpListId()->toString());
+        $taskList->createTask([
+            'name' => $clickUpDraftTask->getClickUpTaskName()->toString(),
+            'description' => $clickUpDraftTask->getClickUpTaskDescription()->toString(),
+            'due_date' => $clickUpDraftTask->getClickUpTaskDueDate()?->unix(),
+        ]);
     }
 }
