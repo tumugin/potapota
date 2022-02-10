@@ -28,8 +28,8 @@ class Main
     {
         $this->logger->info("Potapota started.");
 
-        $this->discordEventRepository->onDiscordReadyEvent(function () {
-            $this->discordReactionReceiveAndCreateTaskUseCase->listenOnReceiveEmoji();
-        });
+        $this->discordEventRepository->onDiscordReadyEvent(
+            fn() => $this->discordReactionReceiveAndCreateTaskUseCase->listenOnReceiveEmoji()
+        );
     }
 }
