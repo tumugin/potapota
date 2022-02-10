@@ -36,8 +36,8 @@
     "squizlabs/php_codesniffer": "3.6.2"
   },
   "scripts": {
-    "phpcs": "vendor/bin/phpcs",
-    "phpcs:fix": "vendor/bin/phpcbf",
+    "phpcs": "phpcs --standard=phpcs.xml",
+    "phpcbf": "phpcbf --standard=phpcs.xml",
     "test": "XDEBUG_MODE=coverage vendor/bin/phpunit --testdox --colors=always",
     "test:coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html build/coverage"
   }
