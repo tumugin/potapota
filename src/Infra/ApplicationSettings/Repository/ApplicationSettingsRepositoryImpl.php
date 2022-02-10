@@ -13,6 +13,7 @@ use Tumugin\Potapota\Domain\Application\ClickUpProjectId;
 use Tumugin\Potapota\Domain\Application\ClickUpSpaceId;
 use Tumugin\Potapota\Domain\Application\ClickUpTeamId;
 use Tumugin\Potapota\Domain\Application\DiscordToken;
+use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
 
 class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
 {
@@ -28,6 +29,7 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         $this->loadEnv();
         return new ApplicationSettings(
             DiscordToken::byString(getenv('DISCORD_TOKEN')),
+            DiscordTriggerEmoji::byString(getenv('DISCORD_TRIGGER_EMOJI')),
             ClickUpAPIToken::byString(getenv('CLICKUP_API_TOKEN')),
             ClickUpTeamId::byString(getenv('CLICKUP_TEAM_ID')),
             ClickUpSpaceId::byString(getenv('CLICKUP_SPACE_ID')),

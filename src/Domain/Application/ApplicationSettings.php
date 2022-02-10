@@ -7,6 +7,7 @@ namespace Tumugin\Potapota\Domain\Application;
 class ApplicationSettings
 {
     private DiscordToken $discordToken;
+    private DiscordTriggerEmoji $discordTriggerEmoji;
     private ClickUpAPIToken $clickUpAPIToken;
     private ClickUpTeamId $clickUpTeamId;
     private ClickUpSpaceId $clickUpSpaceId;
@@ -15,6 +16,7 @@ class ApplicationSettings
 
     public function __construct(
         DiscordToken $discordToken,
+        DiscordTriggerEmoji $discordTriggerEmoji,
         ClickUpAPIToken $clickUpAPIToken,
         ClickUpTeamId $clickUpTeamId,
         ClickUpSpaceId $clickUpSpaceId,
@@ -22,6 +24,7 @@ class ApplicationSettings
         ClickUpListId $clickUpListId
     ) {
         $this->discordToken = $discordToken;
+        $this->discordTriggerEmoji = $discordTriggerEmoji;
         $this->clickUpAPIToken = $clickUpAPIToken;
         $this->clickUpTeamId = $clickUpTeamId;
         $this->clickUpSpaceId = $clickUpSpaceId;
@@ -32,6 +35,11 @@ class ApplicationSettings
     public function getDiscordToken(): DiscordToken
     {
         return $this->discordToken;
+    }
+
+    public function getDiscordTriggerEmoji(): DiscordTriggerEmoji
+    {
+        return $this->discordTriggerEmoji;
     }
 
     public function getClickUpAPIToken(): ClickUpAPIToken

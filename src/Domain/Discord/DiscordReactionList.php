@@ -8,4 +8,12 @@ use Tumugin\Stannum\SnList;
 
 class DiscordReactionList extends SnList
 {
+    public function findReactionByEmoji(DiscordReactionEmoji $discordReactionEmoji): ?DiscordReaction
+    {
+        return $this->find(
+            fn(DiscordReaction $discordReaction) => $discordReaction->getDiscordReactionEmoji()->equals(
+                $discordReactionEmoji
+            )
+        );
+    }
 }
