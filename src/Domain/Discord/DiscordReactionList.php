@@ -6,6 +6,6 @@ namespace Tumugin\Potapota\Domain\Discord;
 
 use Tumugin\Stannum\SnList;
 
-class DiscordReactionEmojiList extends SnList
+class DiscordReactionList extends SnList
 {
 }

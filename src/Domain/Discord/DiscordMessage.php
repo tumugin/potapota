@@ -11,7 +11,7 @@ class DiscordMessage
     private DiscordMessageId $discordMessageId;
     private DiscordMessageAuthor $discordAuthor;
     private DiscordAttachmentList $discordAttachmentList;
-    private DiscordReactionEmojiList $discordReactionEmojiList;
+    private DiscordReactionList $discordReactionList;
 
     public function __construct(
         DiscordChannelId $discordChannelId,
@@ -19,14 +19,14 @@ class DiscordMessage
         DiscordMessageId $discordMessageId,
         DiscordMessageAuthor $discordAuthor,
         DiscordAttachmentList $discordAttachmentList,
-        DiscordReactionEmojiList $discordReactionEmojiList
+        DiscordReactionList $discordReactionList
     ) {
         $this->discordChannelId = $discordChannelId;
         $this->discordMessageContent = $discordMessageContent;
         $this->discordMessageId = $discordMessageId;
         $this->discordAuthor = $discordAuthor;
         $this->discordAttachmentList = $discordAttachmentList;
-        $this->discordReactionEmojiList = $discordReactionEmojiList;
+        $this->discordReactionList = $discordReactionList;
     }
 
     public function getDiscordChannelId(): DiscordChannelId
@@ -54,8 +54,8 @@ class DiscordMessage
         return $this->discordAttachmentList;
     }
 
-    public function getDiscordReactionEmojiList(): DiscordReactionEmojiList
+    public function getDiscordReactionList(): DiscordReactionList
     {
-        return $this->discordReactionEmojiList;
+        return $this->discordReactionList;
     }
 }

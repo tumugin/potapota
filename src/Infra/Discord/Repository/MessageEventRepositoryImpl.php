@@ -4,13 +4,70 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Infra\Discord\Repository;
 
+use Discord\Discord;
+use Discord\Parts\Channel\Reaction;
+use Discord\Parts\WebSockets\MessageReaction;
+use Discord\WebSockets\Event;
+use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
+use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
+use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
+use Tumugin\Potapota\Domain\Discord\DiscordChannelId;
+use Tumugin\Potapota\Domain\Discord\DiscordMessage;
+use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthor;
+use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthorId;
+use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthorName;
+use Tumugin\Potapota\Domain\Discord\DiscordMessageContent;
+use Tumugin\Potapota\Domain\Discord\DiscordMessageId;
+use Tumugin\Potapota\Domain\Discord\DiscordReaction;
+use Tumugin\Potapota\Domain\Discord\DiscordReactionCount;
 use Tumugin\Potapota\Domain\Discord\DiscordReactionEmoji;
+use Tumugin\Potapota\Domain\Discord\DiscordReactionList;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
+use Tumugin\Stannum\SnList;
 
 class MessageEventRepositoryImpl implements MessageEventRepository
 {
-    public function onEmojiReactionEvent(DiscordReactionEmoji $discordEmoji, callable $onEmojiReactionEvent): void
+    private Discord $discord;
+
+    public function __construct(Discord $discord)
     {
-        // TODO: Implement onEmojiReactionEvent() method.
+        $this->discord = $discord;
+    }
+
+    public function onEmojiReactionEvent(callable $onEmojiReactionEvent): void
+    {
+        $this->discord->on(
+            Event::MESSAGE_REACTION_ADD,
+            function (MessageReaction $reaction) use ($onEmojiReactionEvent) {
+                $convertedReactionsArray = $reaction->message
+                    ->reactions
+                    ->map(fn(Reaction $reaction) => new DiscordReaction(
+                        DiscordReactionEmoji::byString($reaction->emoji->name),
+                        DiscordReactionCount::byInt($reaction->count),
+                    ))
+                    ->toArray();
+                $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
+                    ->map(
+                        fn(string $rawAttachment) => new DiscordAttachment(
+                            DiscordAttachmentUrl::byString($rawAttachment)
+                        )
+                    )
+                    ->toArray();
+
+                $onEmojiReactionEvent(
+                    new DiscordMessage(
+                        DiscordChannelId::byString($reaction->channel_id),
+                        DiscordMessageContent::byString($reaction->message->content),
+                        DiscordMessageId::byString($reaction->message_id),
+                        new DiscordMessageAuthor(
+                            DiscordMessageAuthorId::byString($reaction->message->author->id),
+                            DiscordMessageAuthorName::byString($reaction->message->author->nick),
+                        ),
+                        DiscordAttachmentList::byArray($convertedAttachmentArray),
+                        DiscordReactionList::byArray($convertedReactionsArray),
+                    )
+                );
+            }
+        );
     }
 }
