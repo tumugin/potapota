@@ -68,7 +68,10 @@ class DiscordReactionReceiveAndCreateTaskUseCase
 
         // 作成されたタスクのリンクを送信する
         $this->discordMessageRepository->createMessage(
-            $this->discordMessageDomainService->createDiscordDraftMessageByClickUpTask($createdTask)
+            $this->discordMessageDomainService->createDiscordDraftMessageByClickUpTask(
+                $discordMessage->getDiscordChannelId(),
+                $createdTask
+            )
         );
     }
 }
