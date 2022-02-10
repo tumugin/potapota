@@ -15,10 +15,12 @@ use Tumugin\Potapota\Console\Main;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
+use Tumugin\Potapota\Domain\Discord\DiscordEventRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageRepository;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
 use Tumugin\Potapota\Infra\ApplicationSettings\Repository\ApplicationSettingsRepositoryImpl;
 use Tumugin\Potapota\Infra\ClickUp\Repository\ClickUpTaskRepositoryImpl;
+use Tumugin\Potapota\Infra\Discord\Repository\DiscordEventRepositoryImpl;
 use Tumugin\Potapota\Infra\Discord\Repository\DiscordMessageRepositoryImpl;
 use Tumugin\Potapota\Infra\Discord\Repository\MessageEventRepositoryImpl;
 use Tumugin\Potapota\Logger\LoggerSettings;
@@ -65,6 +67,7 @@ class Container
             ClickUpTaskRepository::class => autowire(ClickUpTaskRepositoryImpl::class),
             DiscordMessageRepository::class => autowire(DiscordMessageRepositoryImpl::class),
             ApplicationSettingsRepository::class => autowire(ApplicationSettingsRepositoryImpl::class),
+            DiscordEventRepository::class => autowire(DiscordEventRepositoryImpl::class),
         ];
     }
 }

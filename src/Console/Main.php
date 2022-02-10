@@ -4,33 +4,31 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Console;
 
-use Discord\Discord;
-use Discord\WebSockets\Event;
 use Psr\Log\LoggerInterface;
+use Tumugin\Potapota\Domain\Discord\DiscordEventRepository;
 use Tumugin\Potapota\Usecase\Discord\DiscordReactionReceiveAndCreateTaskUseCase;
 
 class Main
 {
     private LoggerInterface $logger;
-    private Discord $discord;
     private DiscordReactionReceiveAndCreateTaskUseCase $discordReactionReceiveAndCreateTaskUseCase;
+    private DiscordEventRepository $discordEventRepository;
 
     public function __construct(
         LoggerInterface $logger,
-        Discord $discord,
-        DiscordReactionReceiveAndCreateTaskUseCase $discordReactionReceiveAndCreateTaskUseCase
+        DiscordReactionReceiveAndCreateTaskUseCase $discordReactionReceiveAndCreateTaskUseCase,
+        DiscordEventRepository $discordEventRepository
     ) {
         $this->logger = $logger;
-        $this->discord = $discord;
         $this->discordReactionReceiveAndCreateTaskUseCase = $discordReactionReceiveAndCreateTaskUseCase;
+        $this->discordEventRepository = $discordEventRepository;
     }
 
     public function execute()
     {
         $this->logger->info("Potapota started.");
 
-        // FIXME: イベントループを始めるのに一旦ここから直接呼び出している
-        $this->discord->on(Event::READY, function () {
+        $this->discordEventRepository->onDiscordReadyEvent(function () {
             $this->discordReactionReceiveAndCreateTaskUseCase->listenOnReceiveEmoji();
         });
     }
