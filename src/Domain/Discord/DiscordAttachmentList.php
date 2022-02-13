@@ -14,9 +14,10 @@ class DiscordAttachmentList extends SnList
     {
         $mappedStringList = SnStringList::byArray(
             $this->map(
-                fn(DiscordAttachment $discordAttachment) => $discordAttachment
-                    ->getDiscordAttachmentUrl()
-                    ->toString()
+                fn(DiscordAttachment $discordAttachment) => SnString::byString(
+                    $discordAttachment
+                        ->getDiscordAttachmentUrl()->toString()
+                )
             )->toArray()
         );
 
