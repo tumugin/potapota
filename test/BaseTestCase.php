@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Test;
 
 use Carbon\Carbon;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tumugin\Potapota\DI\Container;
 
 class BaseTestCase extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     private \DI\Container $container;
 
     public static function setUpBeforeClass(): void
