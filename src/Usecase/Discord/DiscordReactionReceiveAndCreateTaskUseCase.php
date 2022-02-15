@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Usecase\Discord;
 
+use Psr\Log\LoggerInterface;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskDomainService;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
@@ -21,6 +22,7 @@ class DiscordReactionReceiveAndCreateTaskUseCase
     private ClickUpTaskDomainService $clickUpTaskDomainService;
     private DiscordMessageDomainService $discordMessageDomainService;
     private DiscordMessageRepository $discordMessageRepository;
+    private LoggerInterface $logger;
 
     public function __construct(
         MessageEventRepository $messageEventRepository,
@@ -28,7 +30,8 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         ClickUpTaskRepository $clickUpTaskRepository,
         ClickUpTaskDomainService $clickUpTaskDomainService,
         DiscordMessageDomainService $discordMessageDomainService,
-        DiscordMessageRepository $discordMessageRepository
+        DiscordMessageRepository $discordMessageRepository,
+        LoggerInterface $logger
     ) {
         $this->messageEventRepository = $messageEventRepository;
         $this->applicationSettings = $applicationSettings;
@@ -36,12 +39,16 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         $this->clickUpTaskDomainService = $clickUpTaskDomainService;
         $this->discordMessageDomainService = $discordMessageDomainService;
         $this->discordMessageRepository = $discordMessageRepository;
+        $this->logger = $logger;
     }
 
     public function listenOnReceiveEmoji(): void
     {
         $this->messageEventRepository->onEmojiReactionEvent(
-            fn(DiscordMessage $discordMessage) => $this->onReceiveEmoji($discordMessage)
+            function (DiscordMessage $discordMessage) {
+                $this->logger->info('Received emoji reaction event.');
+                $this->onReceiveEmoji($discordMessage);
+            }
         );
     }
 
@@ -54,10 +61,12 @@ class DiscordReactionReceiveAndCreateTaskUseCase
             );
 
         if (!$foundTriggerEmojiReaction) {
+            $this->logger->info('Trigger emoji was not found in message.');
             return;
         }
 
         if ($foundTriggerEmojiReaction->getDiscordReactionCount()->isGreaterThan(SnInteger::byInt(1))) {
+            $this->logger->info('Trigger emoji was reacted before.');
             return;
         }
 
@@ -65,6 +74,7 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         $createdTask = $this->clickUpTaskRepository->createClickUpTask(
             $this->clickUpTaskDomainService->createClickUpDraftTaskByDiscordMessage($discordMessage)
         );
+        $this->logger->info('ClickUp task created.');
 
         // 作成されたタスクのリンクを送信する
         $this->discordMessageRepository->createMessage(
@@ -73,5 +83,6 @@ class DiscordReactionReceiveAndCreateTaskUseCase
                 $createdTask
             )
         );
+        $this->logger->info('Message sent.');
     }
 }
