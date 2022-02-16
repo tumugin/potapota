@@ -23,7 +23,7 @@ class BaseTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        putenv('ENV=test');
+        putenv('APP_ENV=test');
         $this->container = Container::createContainer();
     }
 

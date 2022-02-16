@@ -19,8 +19,9 @@ class DiscordEventRepositoryImpl implements DiscordEventRepository
 
     public function onDiscordReadyEvent(callable $onDiscordReady): void
     {
-        $this->discord->on(Event::READY, function () use ($onDiscordReady) {
+        $this->discord->on('ready', function () use ($onDiscordReady) {
             $onDiscordReady();
         });
+        $this->discord->run();
     }
 }

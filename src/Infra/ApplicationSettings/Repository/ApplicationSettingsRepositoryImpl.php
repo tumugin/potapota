@@ -28,6 +28,7 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
     private function loadEnv(): void
     {
         $dotenv = new Dotenv();
+        $dotenv->usePutenv(true);
         $dotenv->loadEnv('.env', 'ENV');
     }
 }

@@ -30,7 +30,7 @@ class Main
 
         $this->discordEventRepository->onDiscordReadyEvent(
             function () {
-                $this->logger->info('Discord ready.');
+                $this->logger->info('Potapota Discord ready.');
                 $this->discordReactionReceiveAndCreateTaskUseCase->listenOnReceiveEmoji();
             }
         );

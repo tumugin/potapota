@@ -8,6 +8,7 @@ use Discord\Discord;
 use Discord\Parts\Channel\Reaction;
 use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
+use Psr\Log\LoggerInterface;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
@@ -28,46 +29,54 @@ use Tumugin\Stannum\SnList;
 class MessageEventRepositoryImpl implements MessageEventRepository
 {
     private Discord $discord;
+    private LoggerInterface $logger;
 
-    public function __construct(Discord $discord)
+    public function __construct(Discord $discord, LoggerInterface $logger)
     {
         $this->discord = $discord;
+        $this->logger = $logger;
     }
 
     public function onEmojiReactionEvent(callable $onEmojiReactionEvent): void
     {
         $this->discord->on(
             Event::MESSAGE_REACTION_ADD,
-            function (MessageReaction $reaction) use ($onEmojiReactionEvent) {
-                $convertedReactionsArray = $reaction->message
-                    ->reactions
-                    ->map(fn(Reaction $reaction) => new DiscordReaction(
-                        DiscordReactionEmoji::byString($reaction->emoji->name),
-                        DiscordReactionCount::byInt($reaction->count),
-                    ))
-                    ->toArray();
-                $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
-                    ->map(
-                        fn(string $rawAttachment) => new DiscordAttachment(
-                            DiscordAttachmentUrl::byString($rawAttachment)
-                        )
-                    )
-                    ->toArray();
-
-                $onEmojiReactionEvent(
-                    new DiscordMessage(
-                        DiscordChannelId::byString($reaction->channel_id),
-                        DiscordMessageContent::byString($reaction->message->content),
-                        DiscordMessageId::byString($reaction->message_id),
-                        new DiscordMessageAuthor(
-                            DiscordMessageAuthorId::byString($reaction->message->author->id),
-                            DiscordMessageAuthorName::byString($reaction->message->author->nick),
-                        ),
-                        DiscordAttachmentList::byArray($convertedAttachmentArray),
-                        DiscordReactionList::byArray($convertedReactionsArray),
-                    )
-                );
+            function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
+                $reaction->fetch()->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
+                    $this->logger->info('Loaded message.');
+                    $onEmojiReactionEvent($this->processMessageReaction($reaction));
+                });
             }
+        );
+    }
+
+    private function processMessageReaction(MessageReaction $reaction): DiscordMessage
+    {
+        $convertedReactionsArray = $reaction->message
+            ->reactions
+            ->map(fn(Reaction $reaction) => new DiscordReaction(
+                DiscordReactionEmoji::byString($reaction->emoji->name),
+                DiscordReactionCount::byInt($reaction->count),
+            ))
+            ->toArray();
+        $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
+            ->map(
+                fn(string $rawAttachment) => new DiscordAttachment(
+                    DiscordAttachmentUrl::byString($rawAttachment)
+                )
+            )
+            ->toArray();
+
+        return new DiscordMessage(
+            DiscordChannelId::byString($reaction->channel_id),
+            DiscordMessageContent::byString($reaction->message->content),
+            DiscordMessageId::byString($reaction->message_id),
+            new DiscordMessageAuthor(
+                DiscordMessageAuthorId::byString($reaction->message->author->id),
+                DiscordMessageAuthorName::byString($reaction->message->author->username),
+            ),
+            DiscordAttachmentList::byArray($convertedAttachmentArray),
+            DiscordReactionList::byArray($convertedReactionsArray),
         );
     }
 }

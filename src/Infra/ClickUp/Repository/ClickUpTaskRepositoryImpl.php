@@ -39,17 +39,18 @@ class ClickUpTaskRepositoryImpl implements ClickUpTaskRepository
         $createdRawTask = $taskList->createTask([
             'name' => $clickUpDraftTask->getClickUpTaskName()->toString(),
             'description' => $clickUpDraftTask->getClickUpTaskDescription()->toString(),
-            'due_date' => $clickUpDraftTask->getClickUpTaskDueDate()?->unix(),
+            // NOTE: ミリ秒でのUNIX時間を指定する
+            'due_date' => $clickUpDraftTask->getClickUpTaskDueDate()?->getPreciseTimestamp(3),
         ]);
 
         return new ClickUpTask(
             ClickUpTaskId::byString($createdRawTask['id']),
-            ClickUpTaskName::byString($createdRawTask['name']),
-            ClickUpTaskDescription::byString($createdRawTask['description']),
-            $createdRawTask['due_date'] !== null ? ClickUpTaskDueDate::createFromTimestampUTC(
-                $createdRawTask['due_date']
+            ClickUpTaskName::byString($createdRawTask['task']['name']),
+            ClickUpTaskDescription::byString($createdRawTask['task']['description']),
+            $createdRawTask['task']['due_date'] !== null ? ClickUpTaskDueDate::createFromTimestampUTC(
+                $createdRawTask['task']['due_date']
             ) : null,
-            ClickUpTaskUrl::byString($createdRawTask['url'])
+            ClickUpTaskUrl::byString($createdRawTask['task']['url'])
         );
     }
 }
