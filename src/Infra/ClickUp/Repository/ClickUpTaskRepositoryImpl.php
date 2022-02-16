@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Infra\ClickUp\Repository;
 
 use ClickUp\Client;
+use ClickUp\Objects\TaskList;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTask;
@@ -28,10 +29,13 @@ class ClickUpTaskRepositoryImpl implements ClickUpTaskRepository
 
     public function createClickUpTask(ClickUpDraftTask $clickUpDraftTask): ClickUpTask
     {
-        $team = $this->client->team($this->applicationSettings->getClickUpTeamId()->toString());
-        $space = $team->space($this->applicationSettings->getClickUpSpaceId()->toString());
-        $project = $space->project($this->applicationSettings->getClickUpProjectId()->toString());
-        $taskList = $project->taskList($this->applicationSettings->getClickUpListId()->toString());
+        $taskList = new TaskList(
+            $this->client,
+            [
+                'id' => $this->applicationSettings->getClickUpListId()->toString(),
+                'name' => '',
+            ]
+        );
         $createdRawTask = $taskList->createTask([
             'name' => $clickUpDraftTask->getClickUpTaskName()->toString(),
             'description' => $clickUpDraftTask->getClickUpTaskDescription()->toString(),
