@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Infra\ApplicationSettings\Repository;
 
 use Symfony\Component\Dotenv\Dotenv;
-use Tumugin\Potapota\Domain\Application\ApplicationEnvironment;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
 use Tumugin\Potapota\Domain\Application\ClickUpAPIToken;
@@ -15,18 +14,9 @@ use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
 
 class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
 {
-    private Dotenv $dotenv;
-
-    public function __construct(Dotenv $dotenv)
-    {
-        $this->dotenv = $dotenv;
-    }
-
     public function getApplicationSettings(): ApplicationSettings
     {
-        $this->loadEnv(
-            ApplicationEnvironment::fromString(getenv('ENV') ?? '')
-        );
+        $this->loadEnv();
         return new ApplicationSettings(
             DiscordToken::byString(getenv('DISCORD_TOKEN')),
             DiscordTriggerEmoji::byString(getenv('DISCORD_TRIGGER_EMOJI')),
@@ -35,9 +25,9 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         );
     }
 
-    private function loadEnv(ApplicationEnvironment $applicationEnvironment): void
+    private function loadEnv(): void
     {
-        $envInString = $applicationEnvironment->toString();
-        $this->dotenv->load(__DIR__ . "/{$envInString}.env");
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv('.env', 'ENV');
     }
 }

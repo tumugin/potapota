@@ -10,7 +10,6 @@ use Discord\Discord;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Dotenv\Dotenv;
 use Tumugin\Potapota\Console\Main;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
@@ -44,7 +43,6 @@ class Container
         return [
             // Library
             Application::class => factory(Application::class),
-            Dotenv::class => factory(Dotenv::class),
             LoggerInterface::class => factory(fn() => new Logger('potapota')),
             Logger::class => get(LoggerInterface::class),
             Main::class => autowire(Main::class),
