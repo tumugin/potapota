@@ -8,3 +8,5 @@ composer.phar
 /.idea/
 /build/
 /.phpunit.result.cache
+
+/.env.dev
