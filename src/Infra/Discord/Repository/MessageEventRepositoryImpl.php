@@ -61,8 +61,8 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             ->toArray();
         $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
             ->map(
-                fn(string $rawAttachment) => new DiscordAttachment(
-                    DiscordAttachmentUrl::byString($rawAttachment)
+                fn(\stdClass $rawAttachment) => new DiscordAttachment(
+                    DiscordAttachmentUrl::byString($rawAttachment->url)
                 )
             )
             ->toArray();
