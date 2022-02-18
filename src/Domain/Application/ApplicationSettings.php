@@ -8,21 +8,15 @@ class ApplicationSettings
 {
     private DiscordToken $discordToken;
     private DiscordTriggerEmoji $discordTriggerEmoji;
-    private ClickUpAPIToken $clickUpAPIToken;
-    private ClickUpListId $clickUpListId;
     readonly public ClickUpSettingMap $clickUpSettingMap;
 
     public function __construct(
         DiscordToken $discordToken,
         DiscordTriggerEmoji $discordTriggerEmoji,
-        ClickUpAPIToken $clickUpAPIToken,
-        ClickUpListId $clickUpListId,
         ClickUpSettingMap $clickUpSettingMap
     ) {
         $this->discordToken = $discordToken;
         $this->discordTriggerEmoji = $discordTriggerEmoji;
-        $this->clickUpAPIToken = $clickUpAPIToken;
-        $this->clickUpListId = $clickUpListId;
         $this->clickUpSettingMap = $clickUpSettingMap;
     }
 
@@ -34,15 +28,5 @@ class ApplicationSettings
     public function getDiscordTriggerEmoji(): DiscordTriggerEmoji
     {
         return $this->discordTriggerEmoji;
-    }
-
-    public function getClickUpAPIToken(): ClickUpAPIToken
-    {
-        return $this->clickUpAPIToken;
-    }
-
-    public function getClickUpListId(): ClickUpListId
-    {
-        return $this->clickUpListId;
     }
 }

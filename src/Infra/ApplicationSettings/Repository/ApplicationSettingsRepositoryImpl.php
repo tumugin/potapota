@@ -22,8 +22,6 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         return new ApplicationSettings(
             DiscordToken::byString(getenv('DISCORD_TOKEN')),
             DiscordTriggerEmoji::byString(getenv('DISCORD_TRIGGER_EMOJI')),
-            ClickUpAPIToken::byString(getenv('CLICKUP_API_TOKEN')),
-            ClickUpListId::byString(getenv('CLICKUP_LIST_ID')),
             $this->createClickUpSettingMapByEnv(getenv())
         );
     }

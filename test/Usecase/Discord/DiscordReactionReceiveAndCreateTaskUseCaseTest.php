@@ -49,8 +49,6 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
         $mockApplicationSettings = new ApplicationSettings(
             DiscordToken::byString(''),
             DiscordTriggerEmoji::byString(self::MOCK_DISCORD_TRIGGER_EMOJI),
-            ClickUpAPIToken::byString(''),
-            ClickUpListId::byString(''),
             new ClickUpSettingMap([
                 '12345' => new ClickUpSetting(
                     ClickUpAPIToken::byString('123'),
