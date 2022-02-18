@@ -70,8 +70,18 @@ class DiscordReactionReceiveAndCreateTaskUseCase
             return;
         }
 
+        if (
+            !$this->applicationSettings->clickUpSettingMap->settingsOfDiscordGuildIdExists(
+                $discordMessage->discordGuildId
+            )
+        ) {
+            $this->logger->error("ClickUp setting for this guild({$discordMessage->discordGuildId}) not found.");
+            return;
+        }
+
         // タスクを作成する
         $createdTask = $this->clickUpTaskRepository->createClickUpTask(
+            $discordMessage->discordGuildId,
             $this->clickUpTaskDomainService->createClickUpDraftTaskByDiscordMessage($discordMessage)
         );
         $this->logger->info('ClickUp task created.');

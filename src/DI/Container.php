@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\DI;
 
-use ClickUp\Client as ClickUpClient;
 use DI\ContainerBuilder;
 use Discord\Discord;
 use Monolog\Logger;
@@ -47,9 +46,6 @@ class Container
             Logger::class => get(LoggerInterface::class),
             Main::class => autowire(Main::class),
             LoggerSettings::class => autowire(LoggerSettings::class),
-            ClickUpClient::class => fn(ApplicationSettings $applicationSettings) => new ClickUpClient(
-                $applicationSettings->getClickUpAPIToken()->toString()
-            ),
             Discord::class => fn(
                 ApplicationSettings $applicationSettings,
                 LoggerInterface $logger

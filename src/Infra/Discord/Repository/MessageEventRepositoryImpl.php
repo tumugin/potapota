@@ -13,6 +13,7 @@ use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
 use Tumugin\Potapota\Domain\Discord\DiscordChannelId;
+use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
 use Tumugin\Potapota\Domain\Discord\DiscordMessage;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthor;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthorId;
@@ -77,6 +78,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             ),
             DiscordAttachmentList::byArray($convertedAttachmentArray),
             DiscordReactionList::byArray($convertedReactionsArray),
+            DiscordGuildId::byString($reaction->message->guild_id)
         );
     }
 }

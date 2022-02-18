@@ -6,6 +6,11 @@ namespace Tumugin\Potapota\Test\Usecase\Discord;
 
 use Mockery;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
+use Tumugin\Potapota\Domain\Application\ClickUpAPIToken;
+use Tumugin\Potapota\Domain\Application\ClickUpListId;
+use Tumugin\Potapota\Domain\Application\ClickUpSetting;
+use Tumugin\Potapota\Domain\Application\ClickUpSettingMap;
+use Tumugin\Potapota\Domain\Application\DiscordToken;
 use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskDescription;
@@ -17,6 +22,7 @@ use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
 use Tumugin\Potapota\Domain\Discord\DiscordChannelId;
+use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
 use Tumugin\Potapota\Domain\Discord\DiscordMessage;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthor;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageAuthorId;
@@ -40,10 +46,18 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
     {
         parent::setUp();
 
-        $mockApplicationSettings = Mockery::mock(ApplicationSettings::class);
-        $mockApplicationSettings
-            ->shouldReceive('getDiscordTriggerEmoji')
-            ->andReturn(DiscordTriggerEmoji::byString(self::MOCK_DISCORD_TRIGGER_EMOJI));
+        $mockApplicationSettings = new ApplicationSettings(
+            DiscordToken::byString(''),
+            DiscordTriggerEmoji::byString(self::MOCK_DISCORD_TRIGGER_EMOJI),
+            ClickUpAPIToken::byString(''),
+            ClickUpListId::byString(''),
+            new ClickUpSettingMap([
+                '12345' => new ClickUpSetting(
+                    ClickUpAPIToken::byString('123'),
+                    ClickUpListId::byString('123')
+                ),
+            ])
+        );
         $this->getContainer()->set(
             ApplicationSettings::class,
             $mockApplicationSettings
@@ -135,7 +149,8 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
                             DiscordReactionEmoji::byString(self::MOCK_DISCORD_TRIGGER_EMOJI),
                             DiscordReactionCount::byInt(2)
                         )
-                    ])
+                    ]),
+                    DiscordGuildId::byString('12345')
                 )
             ],
             [
@@ -157,7 +172,8 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
                             DiscordReactionEmoji::byString('uooooooo'),
                             DiscordReactionCount::byInt(1)
                         )
-                    ])
+                    ]),
+                    DiscordGuildId::byString('12345')
                 )
             ],
             [
@@ -170,7 +186,8 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
                         DiscordMessageAuthorName::byString('藍井すずしか好きじゃないオタク')
                     ),
                     DiscordAttachmentList::byArray([]),
-                    DiscordReactionList::byArray([])
+                    DiscordReactionList::byArray([]),
+                    DiscordGuildId::byString('12345')
                 )
             ],
         ];
@@ -207,7 +224,8 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
                     DiscordReactionEmoji::byString(self::MOCK_DISCORD_TRIGGER_EMOJI),
                     DiscordReactionCount::byInt(1)
                 )
-            ])
+            ]),
+            DiscordGuildId::byString('12345')
         );
     }
 }

@@ -12,6 +12,7 @@ class DiscordMessage
     private DiscordMessageAuthor $discordAuthor;
     private DiscordAttachmentList $discordAttachmentList;
     private DiscordReactionList $discordReactionList;
+    public readonly DiscordGuildId $discordGuildId;
 
     public function __construct(
         DiscordChannelId $discordChannelId,
@@ -19,7 +20,8 @@ class DiscordMessage
         DiscordMessageId $discordMessageId,
         DiscordMessageAuthor $discordAuthor,
         DiscordAttachmentList $discordAttachmentList,
-        DiscordReactionList $discordReactionList
+        DiscordReactionList $discordReactionList,
+        DiscordGuildId $discordGuildId
     ) {
         $this->discordChannelId = $discordChannelId;
         $this->discordMessageContent = $discordMessageContent;
@@ -27,6 +29,7 @@ class DiscordMessage
         $this->discordAuthor = $discordAuthor;
         $this->discordAttachmentList = $discordAttachmentList;
         $this->discordReactionList = $discordReactionList;
+        $this->discordGuildId = $discordGuildId;
     }
 
     public function getDiscordChannelId(): DiscordChannelId

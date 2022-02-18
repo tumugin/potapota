@@ -15,24 +15,32 @@ use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskId;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskName;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskUrl;
+use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
 
 class ClickUpTaskRepositoryImpl implements ClickUpTaskRepository
 {
-    private Client $client;
     private ApplicationSettings $applicationSettings;
 
-    public function __construct(Client $client, ApplicationSettings $applicationSettings)
+    public function __construct(ApplicationSettings $applicationSettings)
     {
-        $this->client = $client;
         $this->applicationSettings = $applicationSettings;
     }
 
-    public function createClickUpTask(ClickUpDraftTask $clickUpDraftTask): ClickUpTask
+    public function createClickUpTask(DiscordGuildId $discordGuildId, ClickUpDraftTask $clickUpDraftTask): ClickUpTask
     {
+        $client = new Client(
+            $this->applicationSettings
+                ->clickUpSettingMap
+                ->getSettingByDiscordGuildId($discordGuildId)
+                ->clickUpAPIToken->toString()
+        );
         $taskList = new TaskList(
-            $this->client,
+            $client,
             [
-                'id' => $this->applicationSettings->getClickUpListId()->toString(),
+                'id' => $this->applicationSettings
+                    ->clickUpSettingMap
+                    ->getSettingByDiscordGuildId($discordGuildId)
+                    ->clickUpListId->toString(),
                 'name' => '',
             ]
         );
