@@ -50,7 +50,7 @@ class Container
                 ApplicationSettings $applicationSettings,
                 LoggerInterface $logger
             ) => new Discord([
-                'token' => $applicationSettings->getDiscordToken()->toString(),
+                'token' => $applicationSettings->discordToken->toString(),
                 'logger' => $logger,
             ]),
             // Domain

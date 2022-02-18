@@ -39,11 +39,11 @@ class DiscordMessageDomainServiceTest extends BaseTestCase
                 ),
             );
 
-        $this->assertSame('test_channel', $actual->getDiscordChannelId()->toString());
+        $this->assertSame('test_channel', $actual->discordChannelId->toString());
         $this->assertSame(
             'タスクを作成しました！
 https://example.com/test/12345',
-            $actual->getDiscordMessageContent()->toString()
+            $actual->discordMessageContent->toString()
         );
     }
 }

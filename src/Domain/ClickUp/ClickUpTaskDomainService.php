@@ -13,14 +13,14 @@ class ClickUpTaskDomainService
     {
         return new ClickUpDraftTask(
             ClickUpTaskDescription::byString(
-                '起票者: ' . $discordMessage->getDiscordAuthor()->getDiscordAuthorName()->toString() . "\n"
+                '起票者: ' . $discordMessage->discordAuthor->discordAuthorName->toString() . "\n"
             )
-                ->concat($discordMessage->getDiscordMessageContent())
+                ->concat($discordMessage->discordMessageContent)
                 ->concat(ClickUpTaskDescription::byString("\n\n"))
-                ->concat($discordMessage->getDiscordAttachmentList()->toSnString()),
+                ->concat($discordMessage->discordAttachmentList->toSnString()),
             ClickUpTaskDueDate::now()->addDays(7),
             ClickUpTaskName::byString(
-                $discordMessage->getDiscordMessageContent()
+                $discordMessage->discordMessageContent
                     ->take(SnInteger::byInt(50))
                     ->toString()
             )

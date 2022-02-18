@@ -71,15 +71,15 @@ class ClickUpTaskDomainServiceTest extends BaseTestCase
 
 https://example.org/test.png
 https://example.org/test2.png',
-            $actual->getClickUpTaskDescription()->toString()
+            $actual->clickUpTaskDescription->toString()
         );
         $this->assertSame(
             '2021-12-14T00:00:00+00:00',
-            $actual->getClickUpTaskDueDate()->toIso8601String()
+            $actual->clickUpTaskDueDate->toIso8601String()
         );
         $this->assertSame(
             '藍井すずしか好きじゃねぇ',
-            $actual->getClickUpTaskName()->toString()
+            $actual->clickUpTaskName->toString()
         );
     }
 }

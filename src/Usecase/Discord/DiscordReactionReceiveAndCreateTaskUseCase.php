@@ -55,9 +55,9 @@ class DiscordReactionReceiveAndCreateTaskUseCase
     public function onReceiveEmoji(DiscordMessage $discordMessage): void
     {
         // triggerになるemojiにリアクションが見つからない場合もしくは1つより多く付いている場合は無視する
-        $foundTriggerEmojiReaction = $discordMessage->getDiscordReactionList()
+        $foundTriggerEmojiReaction = $discordMessage->discordReactionList
             ->findReactionByEmoji(
-                $this->applicationSettings->getDiscordTriggerEmoji()->toDiscordReactionEmoji()
+                $this->applicationSettings->discordTriggerEmoji->toDiscordReactionEmoji()
             );
 
         if (!$foundTriggerEmojiReaction) {
@@ -65,7 +65,7 @@ class DiscordReactionReceiveAndCreateTaskUseCase
             return;
         }
 
-        if ($foundTriggerEmojiReaction->getDiscordReactionCount()->isGreaterThan(SnInteger::byInt(1))) {
+        if ($foundTriggerEmojiReaction->discordReactionCount->isGreaterThan(SnInteger::byInt(1))) {
             $this->logger->info('Trigger emoji was reacted before.');
             return;
         }
@@ -89,7 +89,7 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         // 作成されたタスクのリンクを送信する
         $this->discordMessageRepository->createMessage(
             $this->discordMessageDomainService->createDiscordDraftMessageByClickUpTask(
-                $discordMessage->getDiscordChannelId(),
+                $discordMessage->discordChannelId,
                 $createdTask
             )
         );
