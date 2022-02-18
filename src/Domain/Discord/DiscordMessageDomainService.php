@@ -12,7 +12,7 @@ class DiscordMessageDomainService
         DiscordChannelId $discordChannelId,
         ClickUpTask $clickUpTask
     ): DiscordDraftMessage {
-        $taskUrl = $clickUpTask->getClickUpTaskUrl()->toString();
+        $taskUrl = $clickUpTask->clickUpTaskUrl->toString();
 
         return new DiscordDraftMessage(
             $discordChannelId,

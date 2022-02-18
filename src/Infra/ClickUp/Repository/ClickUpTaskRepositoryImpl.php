@@ -45,10 +45,10 @@ class ClickUpTaskRepositoryImpl implements ClickUpTaskRepository
             ]
         );
         $createdRawTask = $taskList->createTask([
-            'name' => $clickUpDraftTask->getClickUpTaskName()->toString(),
-            'description' => $clickUpDraftTask->getClickUpTaskDescription()->toString(),
+            'name' => $clickUpDraftTask->clickUpTaskName->toString(),
+            'description' => $clickUpDraftTask->clickUpTaskDescription->toString(),
             // NOTE: ミリ秒でのUNIX時間を指定する
-            'due_date' => $clickUpDraftTask->getClickUpTaskDueDate()?->getPreciseTimestamp(3),
+            'due_date' => $clickUpDraftTask->clickUpTaskDueDate?->getPreciseTimestamp(3),
         ]);
 
         return new ClickUpTask(

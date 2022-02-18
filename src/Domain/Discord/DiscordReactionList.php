@@ -11,7 +11,7 @@ class DiscordReactionList extends SnList
     public function findReactionByEmoji(DiscordReactionEmoji $discordReactionEmoji): ?DiscordReaction
     {
         return $this->find(
-            fn(DiscordReaction $discordReaction) => $discordReaction->getDiscordReactionEmoji()->equals(
+            fn(DiscordReaction $discordReaction) => $discordReaction->discordReactionEmoji->equals(
                 $discordReactionEmoji
             )
         );

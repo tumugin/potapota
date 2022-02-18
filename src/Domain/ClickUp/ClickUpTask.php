@@ -6,11 +6,11 @@ namespace Tumugin\Potapota\Domain\ClickUp;
 
 class ClickUpTask
 {
-    private ClickUpTaskId $clickUpTaskId;
-    private ClickUpTaskName $clickUpTaskName;
-    private ClickUpTaskDescription $clickUpTaskDescription;
-    private ?ClickUpTaskDueDate $clickUpTaskDueDate;
-    private ClickUpTaskUrl $clickUpTaskUrl;
+    public readonly ClickUpTaskId $clickUpTaskId;
+    public readonly ClickUpTaskName $clickUpTaskName;
+    public readonly ClickUpTaskDescription $clickUpTaskDescription;
+    public readonly ?ClickUpTaskDueDate $clickUpTaskDueDate;
+    public readonly ClickUpTaskUrl $clickUpTaskUrl;
 
     public function __construct(
         ClickUpTaskId $clickUpTaskId,
@@ -24,30 +24,5 @@ class ClickUpTask
         $this->clickUpTaskDescription = $clickUpTaskDescription;
         $this->clickUpTaskDueDate = $clickUpTaskDueDate;
         $this->clickUpTaskUrl = $clickUpTaskUrl;
-    }
-
-    public function getClickUpTaskId(): ClickUpTaskId
-    {
-        return $this->clickUpTaskId;
-    }
-
-    public function getClickUpTaskName(): ClickUpTaskName
-    {
-        return $this->clickUpTaskName;
-    }
-
-    public function getClickUpTaskDescription(): ClickUpTaskDescription
-    {
-        return $this->clickUpTaskDescription;
-    }
-
-    public function getClickUpTaskDueDate(): ?ClickUpTaskDueDate
-    {
-        return $this->clickUpTaskDueDate;
-    }
-
-    public function getClickUpTaskUrl(): ClickUpTaskUrl
-    {
-        return $this->clickUpTaskUrl;
     }
 }

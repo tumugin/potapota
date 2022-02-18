@@ -6,12 +6,12 @@ namespace Tumugin\Potapota\Domain\Discord;
 
 class DiscordMessage
 {
-    private DiscordChannelId $discordChannelId;
-    private DiscordMessageContent $discordMessageContent;
-    private DiscordMessageId $discordMessageId;
-    private DiscordMessageAuthor $discordAuthor;
-    private DiscordAttachmentList $discordAttachmentList;
-    private DiscordReactionList $discordReactionList;
+    public readonly DiscordChannelId $discordChannelId;
+    public readonly DiscordMessageContent $discordMessageContent;
+    public readonly DiscordMessageId $discordMessageId;
+    public readonly DiscordMessageAuthor $discordAuthor;
+    public readonly DiscordAttachmentList $discordAttachmentList;
+    public readonly DiscordReactionList $discordReactionList;
     public readonly DiscordGuildId $discordGuildId;
 
     public function __construct(
@@ -30,35 +30,5 @@ class DiscordMessage
         $this->discordAttachmentList = $discordAttachmentList;
         $this->discordReactionList = $discordReactionList;
         $this->discordGuildId = $discordGuildId;
-    }
-
-    public function getDiscordChannelId(): DiscordChannelId
-    {
-        return $this->discordChannelId;
-    }
-
-    public function getDiscordMessageContent(): DiscordMessageContent
-    {
-        return $this->discordMessageContent;
-    }
-
-    public function getDiscordMessageId(): DiscordMessageId
-    {
-        return $this->discordMessageId;
-    }
-
-    public function getDiscordAuthor(): DiscordMessageAuthor
-    {
-        return $this->discordAuthor;
-    }
-
-    public function getDiscordAttachmentList(): DiscordAttachmentList
-    {
-        return $this->discordAttachmentList;
-    }
-
-    public function getDiscordReactionList(): DiscordReactionList
-    {
-        return $this->discordReactionList;
     }
 }
