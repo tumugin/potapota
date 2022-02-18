@@ -78,7 +78,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             ),
             DiscordAttachmentList::byArray($convertedAttachmentArray),
             DiscordReactionList::byArray($convertedReactionsArray),
-            DiscordGuildId::byString($reaction->message->guild_id)
+            DiscordGuildId::byString($reaction->guild_id)
         );
     }
 }
