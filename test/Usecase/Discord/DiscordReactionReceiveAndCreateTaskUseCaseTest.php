@@ -54,7 +54,8 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
                     ClickUpAPIToken::byString('123'),
                     ClickUpListId::byString('123')
                 ),
-            ])
+            ]),
+            null
         );
         $this->getContainer()->set(
             ApplicationSettings::class,

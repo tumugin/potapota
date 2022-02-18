@@ -8,15 +8,18 @@ class ApplicationSettings
 {
     public readonly DiscordToken $discordToken;
     public readonly DiscordTriggerEmoji $discordTriggerEmoji;
-    readonly public ClickUpSettingMap $clickUpSettingMap;
+    public readonly ClickUpSettingMap $clickUpSettingMap;
+    public readonly ?SentryDsn $sentryDsn;
 
     public function __construct(
         DiscordToken $discordToken,
         DiscordTriggerEmoji $discordTriggerEmoji,
-        ClickUpSettingMap $clickUpSettingMap
+        ClickUpSettingMap $clickUpSettingMap,
+        ?SentryDsn $sentryDsn
     ) {
         $this->discordToken = $discordToken;
         $this->discordTriggerEmoji = $discordTriggerEmoji;
         $this->clickUpSettingMap = $clickUpSettingMap;
+        $this->sentryDsn = $sentryDsn;
     }
 }

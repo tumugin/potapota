@@ -6,6 +6,7 @@ namespace Tumugin\Potapota\Console;
 
 use Psr\Log\LoggerInterface;
 use Tumugin\Potapota\Domain\Discord\DiscordEventRepository;
+use Tumugin\Potapota\Infra\Application\ErrorReporter;
 use Tumugin\Potapota\Usecase\Discord\DiscordReactionReceiveAndCreateTaskUseCase;
 
 class Main
@@ -13,20 +14,24 @@ class Main
     private LoggerInterface $logger;
     private DiscordReactionReceiveAndCreateTaskUseCase $discordReactionReceiveAndCreateTaskUseCase;
     private DiscordEventRepository $discordEventRepository;
+    private ErrorReporter $errorReporter;
 
     public function __construct(
         LoggerInterface $logger,
         DiscordReactionReceiveAndCreateTaskUseCase $discordReactionReceiveAndCreateTaskUseCase,
-        DiscordEventRepository $discordEventRepository
+        DiscordEventRepository $discordEventRepository,
+        ErrorReporter $errorReporter
     ) {
         $this->logger = $logger;
         $this->discordReactionReceiveAndCreateTaskUseCase = $discordReactionReceiveAndCreateTaskUseCase;
         $this->discordEventRepository = $discordEventRepository;
+        $this->errorReporter = $errorReporter;
     }
 
     public function execute()
     {
         $this->logger->info("Potapota started.");
+        $this->errorReporter->registerErrorReporter();
 
         $this->discordEventRepository->onDiscordReadyEvent(
             function () {

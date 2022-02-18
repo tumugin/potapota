@@ -13,6 +13,7 @@ use Tumugin\Potapota\Domain\Application\ClickUpSetting;
 use Tumugin\Potapota\Domain\Application\ClickUpSettingMap;
 use Tumugin\Potapota\Domain\Application\DiscordToken;
 use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
+use Tumugin\Potapota\Domain\Application\SentryDsn;
 
 class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
 {
@@ -22,7 +23,8 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         return new ApplicationSettings(
             DiscordToken::byString(getenv('DISCORD_TOKEN')),
             DiscordTriggerEmoji::byString(getenv('DISCORD_TRIGGER_EMOJI')),
-            $this->createClickUpSettingMapByEnv(getenv())
+            $this->createClickUpSettingMapByEnv(getenv()),
+            getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null
         );
     }
 
