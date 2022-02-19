@@ -40,7 +40,7 @@ class ClickUpTaskDomainServiceTest extends BaseTestCase
 
         $actual = $this->clickUpTaskDomainService->createClickUpDraftTaskByDiscordMessage(
             new DiscordMessage(
-                DiscordChannelId::byString('testchannel'),
+                DiscordChannelId::byString('test_channel_id'),
                 DiscordMessageContent::byString('藍井すずしか好きじゃねぇ'),
                 DiscordMessageId::byString('test_message_id'),
                 new DiscordMessageAuthor(
@@ -61,12 +61,14 @@ class ClickUpTaskDomainServiceTest extends BaseTestCase
                         DiscordReactionCount::byInt(2)
                     )
                 ]),
-                DiscordGuildId::byString('12345')
+                DiscordGuildId::byString('test_guild_id')
             )
         );
 
         $this->assertSame(
             '起票者: 藍井すず真剣オタク
+メッセージ: https://discord.com/channels/test_guild_id/test_channel_id/test_message_id
+
 藍井すずしか好きじゃねぇ
 
 https://example.org/test.png
