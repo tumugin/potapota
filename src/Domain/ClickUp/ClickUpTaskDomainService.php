@@ -21,7 +21,8 @@ class ClickUpTaskDomainService
             ClickUpTaskName::byString(
                 $discordMessage->discordMessageContent->toString()
             )
-                ->removeUrlsFromTitle()
+                ->removeUrlsFromTaskName()
+                ->removeNewLine()
                 ->shortenTaskName()
         );
     }

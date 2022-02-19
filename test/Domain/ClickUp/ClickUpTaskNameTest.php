@@ -9,14 +9,25 @@ use Tumugin\Potapota\Test\BaseTestCase;
 
 class ClickUpTaskNameTest extends BaseTestCase
 {
-    public function testRemoveUrlsFromTitle(): void
+    public function testRemoveUrlsFromTaskName(): void
     {
         $clickUpTaskName = ClickUpTaskName::byString(
             '藤宮めいは可愛いね https://appare-official.jp/member/contents/498613 あああ'
         );
         $this->assertSame(
             '藤宮めいは可愛いね  あああ',
-            $clickUpTaskName->removeUrlsFromTitle()->toString()
+            $clickUpTaskName->removeUrlsFromTaskName()->toString()
+        );
+    }
+
+    public function testRemoveNewLine(): void
+    {
+        $clickUpTaskName = ClickUpTaskName::byString(
+            "藍井すず\n藤宮めい"
+        );
+        $this->assertSame(
+            '藍井すず藤宮めい',
+            $clickUpTaskName->removeNewLine()->toString()
         );
     }
 
