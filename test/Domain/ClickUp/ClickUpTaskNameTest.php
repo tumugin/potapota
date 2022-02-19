@@ -9,15 +9,42 @@ use Tumugin\Potapota\Test\BaseTestCase;
 
 class ClickUpTaskNameTest extends BaseTestCase
 {
-    public function testRemoveUrlsFromTaskName(): void
+    /**
+     * @dataProvider provideTestRemoveUrlsFromTaskNameStrings
+     */
+    public function testRemoveUrlsFromTaskName(string $beforeString, string $afterString): void
     {
         $clickUpTaskName = ClickUpTaskName::byString(
-            '藤宮めいは可愛いね https://appare-official.jp/member/contents/498613 あああ'
+            $beforeString
         );
         $this->assertSame(
-            '藤宮めいは可愛いね  あああ',
+            $afterString,
             $clickUpTaskName->removeUrlsFromTaskName()->toString()
         );
+    }
+
+    private function provideTestRemoveUrlsFromTaskNameStrings(): array
+    {
+        return [
+            [
+                '藤宮めいは可愛いね https://appare-official.jp/member/contents/498613 あああ',
+                '藤宮めいは可愛いね  あああ',
+            ],
+            [
+                '藤宮めいは可愛いねhttps://appare-official.jp/member/contents/498613 あああ',
+                '藤宮めいは可愛いね あああ',
+            ],
+            [
+                '藤宮めいは可愛いねhttps://appare-official.jp/member/contents/498613 あああ',
+                '藤宮めいは可愛いね あああ',
+            ],
+            [
+                '月ちゃん ' .
+                'https://twitter.com/anthurium_hisui/status/1495026047796281354?s=20&t=k0z-lPNjjNTv9qjMJz5WtQ' .
+                ' もいいね',
+                '月ちゃん  もいいね',
+            ],
+        ];
     }
 
     public function testRemoveNewLine(): void
@@ -39,6 +66,36 @@ class ClickUpTaskNameTest extends BaseTestCase
         $this->assertSame(
             '藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは',
             $clickUpTaskName->shortenTaskName()->toString()
+        );
+    }
+
+    /**
+     * @dataProvider provideTestAddMudaiTextIfEmptyToTaskName
+     */
+    public function testAddMudaiTextIfEmptyToTaskName(string $testString): void
+    {
+        $clickUpTaskName = ClickUpTaskName::byString($testString);
+        $this->assertSame(
+            '無題',
+            $clickUpTaskName->addMudaiTextIfEmptyToTaskName()->toString()
+        );
+    }
+
+    private function provideTestAddMudaiTextIfEmptyToTaskName(): array
+    {
+        return [
+            ['  '],
+            ['　　'],
+            [''],
+        ];
+    }
+
+    public function testAddMudaiTextIfEmptyToTaskNameOnNotEmptyCase(): void
+    {
+        $clickUpTaskName = ClickUpTaskName::byString('アンスリューム大サーカス');
+        $this->assertSame(
+            'アンスリューム大サーカス',
+            $clickUpTaskName->addMudaiTextIfEmptyToTaskName()->toString()
         );
     }
 }

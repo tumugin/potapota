@@ -24,6 +24,7 @@ class ClickUpTaskDomainService
                 ->removeUrlsFromTaskName()
                 ->removeNewLineFromTaskName()
                 ->shortenTaskName()
+                ->addMudaiTextIfEmptyToTaskName()
         );
     }
 }
