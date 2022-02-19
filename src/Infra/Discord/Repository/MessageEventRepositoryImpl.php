@@ -9,6 +9,7 @@ use Discord\Parts\Channel\Reaction;
 use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
 use Psr\Log\LoggerInterface;
+use React\Promise\PromiseInterface;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
@@ -45,24 +46,24 @@ class MessageEventRepositoryImpl implements MessageEventRepository
     {
         $this->discord->on(
             Event::MESSAGE_REACTION_ADD,
-            function (MessageReaction $reaction) {
-                try {
-                    $this->onEmojiReactionEventHandler($reaction);
-                } catch (\Exception $ex) {
-                    $this->exceptionLogger->logExceptionError($ex);
-                }
+            function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
+                $this->onEmojiReactionEventHandler($reaction, $onEmojiReactionEvent)
+                    ->otherwise(
+                        fn(\Exception $ex) => $this->exceptionLogger->logExceptionError($ex)
+                    );
             }
         );
     }
 
-    private function onEmojiReactionEventHandler(MessageReaction $reaction): void
-    {
-        $reaction->fetch()
+    private function onEmojiReactionEventHandler(
+        MessageReaction $reaction,
+        callable $onEmojiReactionEvent
+    ): PromiseInterface {
+        return $reaction->fetch()
             ->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
                 $this->logger->info('Loaded message.');
                 $onEmojiReactionEvent($this->processMessageReaction($reaction));
-            })
-            ->done();
+            });
     }
 
     private function processMessageReaction(MessageReaction $reaction): DiscordMessage
