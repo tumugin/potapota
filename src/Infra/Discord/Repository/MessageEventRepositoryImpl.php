@@ -43,10 +43,12 @@ class MessageEventRepositoryImpl implements MessageEventRepository
         $this->discord->on(
             Event::MESSAGE_REACTION_ADD,
             function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
-                $reaction->fetch()->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
-                    $this->logger->info('Loaded message.');
-                    $onEmojiReactionEvent($this->processMessageReaction($reaction));
-                });
+                $reaction->fetch()
+                    ->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
+                        $this->logger->info('Loaded message.');
+                        $onEmojiReactionEvent($this->processMessageReaction($reaction));
+                    })
+                    ->done();
             }
         );
     }

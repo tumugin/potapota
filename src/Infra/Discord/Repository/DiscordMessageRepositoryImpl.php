@@ -20,6 +20,7 @@ class DiscordMessageRepositoryImpl implements DiscordMessageRepository
     public function createMessage(DiscordDraftMessage $discordDraftMessage): void
     {
         $channel = $this->discord->getChannel($discordDraftMessage->discordChannelId->toString());
-        $channel->sendMessage($discordDraftMessage->discordMessageContent->toString());
+        $channel->sendMessage($discordDraftMessage->discordMessageContent->toString())
+            ->done();
     }
 }
