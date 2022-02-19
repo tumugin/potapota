@@ -17,7 +17,7 @@ class ClickUpTaskName extends SnString
         );
     }
 
-    public function removeNewLine(): static
+    public function removeNewLineFromTaskName(): static
     {
         return $this->pregReplace(
             SnString::byString('/\R/u'),

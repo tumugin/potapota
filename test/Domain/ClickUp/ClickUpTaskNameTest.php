@@ -27,7 +27,7 @@ class ClickUpTaskNameTest extends BaseTestCase
         );
         $this->assertSame(
             '藍井すず藤宮めい',
-            $clickUpTaskName->removeNewLine()->toString()
+            $clickUpTaskName->removeNewLineFromTaskName()->toString()
         );
     }
 

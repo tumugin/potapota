@@ -22,7 +22,7 @@ class ClickUpTaskDomainService
                 $discordMessage->discordMessageContent->toString()
             )
                 ->removeUrlsFromTaskName()
-                ->removeNewLine()
+                ->removeNewLineFromTaskName()
                 ->shortenTaskName()
         );
     }
