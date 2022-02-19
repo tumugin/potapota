@@ -31,4 +31,11 @@ class DiscordMessage
         $this->discordReactionList = $discordReactionList;
         $this->discordGuildId = $discordGuildId;
     }
+
+    public function getDiscordMessageLinkUrl(): DiscordMessageLinkUrl
+    {
+        return DiscordMessageLinkUrl::byString(
+            "https://discord.com/channels/{$this->discordGuildId}/{$this->discordChannelId}/{$this->discordMessageId}"
+        );
+    }
 }
