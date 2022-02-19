@@ -25,32 +25,44 @@ use Tumugin\Potapota\Domain\Discord\DiscordReactionCount;
 use Tumugin\Potapota\Domain\Discord\DiscordReactionEmoji;
 use Tumugin\Potapota\Domain\Discord\DiscordReactionList;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
+use Tumugin\Potapota\Infra\ExceptionLogger\ExceptionLogger;
 use Tumugin\Stannum\SnList;
 
 class MessageEventRepositoryImpl implements MessageEventRepository
 {
     private Discord $discord;
     private LoggerInterface $logger;
+    private ExceptionLogger $exceptionLogger;
 
-    public function __construct(Discord $discord, LoggerInterface $logger)
+    public function __construct(Discord $discord, LoggerInterface $logger, ExceptionLogger $exceptionLogger)
     {
         $this->discord = $discord;
         $this->logger = $logger;
+        $this->exceptionLogger = $exceptionLogger;
     }
 
     public function onEmojiReactionEvent(callable $onEmojiReactionEvent): void
     {
         $this->discord->on(
             Event::MESSAGE_REACTION_ADD,
-            function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
-                $reaction->fetch()
-                    ->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
-                        $this->logger->info('Loaded message.');
-                        $onEmojiReactionEvent($this->processMessageReaction($reaction));
-                    })
-                    ->done();
+            function (MessageReaction $reaction) {
+                try {
+                    $this->onEmojiReactionEventHandler($reaction);
+                } catch (\Exception $ex) {
+                    $this->exceptionLogger->logExceptionError($ex);
+                }
             }
         );
+    }
+
+    private function onEmojiReactionEventHandler(MessageReaction $reaction): void
+    {
+        $reaction->fetch()
+            ->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
+                $this->logger->info('Loaded message.');
+                $onEmojiReactionEvent($this->processMessageReaction($reaction));
+            })
+            ->done();
     }
 
     private function processMessageReaction(MessageReaction $reaction): DiscordMessage
