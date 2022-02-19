@@ -9,10 +9,18 @@ use Tumugin\Stannum\SnString;
 
 class ClickUpTaskName extends SnString
 {
-    public function removeUrlsFromTitle(): static
+    public function removeUrlsFromTaskName(): static
     {
         return $this->pregReplace(
             SnString::byString('/https?:\/\/[\w!?\/+\-_~;.,*&@#$%()\'[\]]+/u'),
+            SnString::byString('')
+        );
+    }
+
+    public function removeNewLineFromTaskName(): static
+    {
+        return $this->pregReplace(
+            SnString::byString('/\R/u'),
             SnString::byString('')
         );
     }
