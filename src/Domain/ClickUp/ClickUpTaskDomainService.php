@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Domain\ClickUp;
 
 use Tumugin\Potapota\Domain\Discord\DiscordMessage;
-use Tumugin\Stannum\SnInteger;
 
 class ClickUpTaskDomainService
 {
@@ -20,10 +19,10 @@ class ClickUpTaskDomainService
                 ->concat($discordMessage->discordAttachmentList->toSnString()),
             ClickUpTaskDueDate::now()->addDays(7),
             ClickUpTaskName::byString(
-                $discordMessage->discordMessageContent
-                    ->take(SnInteger::byInt(50))
-                    ->toString()
+                $discordMessage->discordMessageContent->toString()
             )
+                ->removeUrlsFromTitle()
+                ->shortenTaskName()
         );
     }
 }
