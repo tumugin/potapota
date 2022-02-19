@@ -50,7 +50,8 @@ class MessageEventRepositoryImpl implements MessageEventRepository
                 $this->onEmojiReactionEventHandler($reaction, $onEmojiReactionEvent)
                     ->otherwise(
                         fn(\Exception $ex) => $this->exceptionLogger->logExceptionError($ex)
-                    );
+                    )
+                    ->done();
             }
         );
     }
