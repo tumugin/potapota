@@ -42,6 +42,7 @@ class DiscordMessageDomainServiceTest extends BaseTestCase
         $this->assertSame('test_channel', $actual->discordChannelId->toString());
         $this->assertSame(
             'タスクを作成しました！
+タスクのタイトルは「藍井すずしか好きじゃないタスク」です。
 https://example.com/test/12345',
             $actual->discordMessageContent->toString()
         );

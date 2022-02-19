@@ -12,7 +12,7 @@ class ClickUpTaskName extends SnString
     public function removeUrlsFromTitle(): static
     {
         return $this->pregReplace(
-            SnString::byString("/https?://[\w!?/+\-_~;.,*&@#$%()'[\]]+/u"),
+            SnString::byString('/https?:\/\/[\w!?\/+\-_~;.,*&@#$%()\'[\]]+/u'),
             SnString::byString('')
         );
     }
