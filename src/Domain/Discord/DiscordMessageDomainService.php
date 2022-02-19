@@ -13,10 +13,13 @@ class DiscordMessageDomainService
         ClickUpTask $clickUpTask
     ): DiscordDraftMessage {
         $taskUrl = $clickUpTask->clickUpTaskUrl->toString();
+        $taskTitle = $clickUpTask->clickUpTaskName->toString();
 
         return new DiscordDraftMessage(
             $discordChannelId,
-            DiscordMessageContent::byString("タスクを作成しました！\n{$taskUrl}")
+            DiscordMessageContent::byString(
+                "タスクを作成しました！\nタスクのタイトルは「{$taskTitle}」です。\n{$taskUrl}"
+            )
         );
     }
 }
