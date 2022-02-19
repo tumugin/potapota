@@ -12,7 +12,7 @@ class ClickUpTaskName extends SnString
     public function removeUrlsFromTaskName(): static
     {
         return $this->pregReplace(
-            SnString::byString('/https?:\/\/[\w!?\/+\-_~;.,*&@#$%()\'[\]]+/u'),
+            SnString::byString('/(https?|ftp):\/\/[^\s\/$.?#].[^\s]*/u'),
             SnString::byString('')
         );
     }
@@ -28,5 +28,16 @@ class ClickUpTaskName extends SnString
     public function shortenTaskName(): static
     {
         return $this->take(SnInteger::byInt(50));
+    }
+
+    public function addMudaiTextIfEmptyToTaskName(): static
+    {
+        $trimmedString = $this->trim();
+
+        if ($trimmedString->isEmpty()) {
+            return $this->trim()->concat(SnString::byString('無題'));
+        } else {
+            return $trimmedString;
+        }
     }
 }
