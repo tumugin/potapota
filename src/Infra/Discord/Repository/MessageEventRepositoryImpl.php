@@ -76,7 +76,9 @@ class MessageEventRepositoryImpl implements MessageEventRepository
                 DiscordReactionCount::byInt($reaction->count),
             ))
             ->toArray();
-        $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
+
+        // FIXME: なぜか$reaction->message->attachmentsがnullになることがあるので塞いだ
+        $convertedAttachmentArray = SnList::byArray($reaction->message->attachments ?? [])
             ->map(
                 fn(\stdClass $rawAttachment) => new DiscordAttachment(
                     DiscordAttachmentUrl::byString($rawAttachment->url)
