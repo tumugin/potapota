@@ -18,8 +18,9 @@ class DiscordMessageDomainService
         return new DiscordDraftMessage(
             $discordMessage->discordChannelId,
             DiscordMessageContent::byString(
-                "タスクを作成しました！\n" .
-                "タスクのタイトルは「{$taskTitle}」です。\n" .
+                "タスクを作ったよ～～～！！！\n" .
+                "タスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
+                "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
                 "ClickUp: {$taskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
