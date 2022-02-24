@@ -9,16 +9,20 @@ use Tumugin\Potapota\Domain\ClickUp\ClickUpTask;
 class DiscordMessageDomainService
 {
     public function createDiscordDraftMessageByClickUpTask(
-        DiscordChannelId $discordChannelId,
+        DiscordMessage $discordMessage,
         ClickUpTask $clickUpTask
     ): DiscordDraftMessage {
         $taskUrl = $clickUpTask->clickUpTaskUrl->toString();
         $taskTitle = $clickUpTask->clickUpTaskName->toString();
 
         return new DiscordDraftMessage(
-            $discordChannelId,
+            $discordMessage->discordChannelId,
             DiscordMessageContent::byString(
-                "タスクを作成しました！\nタスクのタイトルは「{$taskTitle}」です。\n{$taskUrl}"
+                "タスクを作ったよ～～～！！！\n" .
+                "タスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
+                "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
+                "ClickUp: {$taskUrl}\n" .
+                "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
         );
     }
