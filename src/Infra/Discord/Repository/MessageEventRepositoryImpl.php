@@ -86,9 +86,12 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             )
             ->toArray();
 
+        // FIXME: なぜかURLだけ含むメッセージはmessage->contentがnullになるケースがあるので塞ぐ
         return new DiscordMessage(
             DiscordChannelId::byString($reaction->channel_id),
-            DiscordMessageContent::byString($reaction->message->content),
+            DiscordMessageContent::byString(
+                $reaction->message->content ?? ''
+            ),
             DiscordMessageId::byString($reaction->message_id),
             new DiscordMessageAuthor(
                 DiscordMessageAuthorId::byString($reaction->message->author->id),
