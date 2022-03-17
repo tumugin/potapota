@@ -69,6 +69,10 @@ class MessageEventRepositoryImpl implements MessageEventRepository
 
     private function processMessageReaction(MessageReaction $reaction): DiscordMessage
     {
+        if ($reaction->isPartial()) {
+            throw new \RuntimeException('message should not be partial.');
+        }
+
         $convertedReactionsArray = $reaction->message
             ->reactions
             ->map(fn(Reaction $reaction) => new DiscordReaction(
@@ -77,8 +81,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             ))
             ->toArray();
 
-        // FIXME: なぜか$reaction->message->attachmentsがnullになることがあるので塞いだ
-        $convertedAttachmentArray = SnList::byArray($reaction->message->attachments ?? [])
+        $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
             ->map(
                 fn(\stdClass $rawAttachment) => new DiscordAttachment(
                     DiscordAttachmentUrl::byString($rawAttachment->url)
