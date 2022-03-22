@@ -3,6 +3,7 @@ volumes:
   psysh-store:
 services:
   app:
+    stdin_open: true
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
