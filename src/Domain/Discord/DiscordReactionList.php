@@ -8,6 +8,7 @@ use Tumugin\Stannum\SnList;
 
 /**
  * @extends SnList<DiscordReaction>
+ * @method static DiscordReactionList byArray(DiscordReaction[] $value)
  */
 class DiscordReactionList extends SnList
 {

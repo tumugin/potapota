@@ -3,3 +3,5 @@ parameters:
         - src
         - test
     level: 9
+includes:
+    - vendor/phpstan/phpstan-mockery/extension.neon

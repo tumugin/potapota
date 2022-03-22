@@ -23,6 +23,9 @@ class ClickUpTaskNameTest extends BaseTestCase
         );
     }
 
+    /**
+     * @phpstan-return array{0:string, 1:string}[]
+     */
     private function provideTestRemoveUrlsFromTaskNameStrings(): array
     {
         return [
@@ -81,6 +84,9 @@ class ClickUpTaskNameTest extends BaseTestCase
         );
     }
 
+    /**
+     * @phpstan-return array{0:string}[]
+     */
     private function provideTestAddMudaiTextIfEmptyToTaskName(): array
     {
         return [

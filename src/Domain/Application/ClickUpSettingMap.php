@@ -10,12 +10,12 @@ use Tumugin\Potapota\Domain\Exceptions\SettingException;
 class ClickUpSettingMap
 {
     /**
-     * @var array<string, ClickUpSetting> $values
+     * @var array<string|int, ClickUpSetting> $values
      */
     private array $values;
 
     /**
-     * @param array<string, ClickUpSetting> $values
+     * @param array<string|int, ClickUpSetting> $values
      * @throws SettingException
      */
     public function __construct(array $values)
