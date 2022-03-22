@@ -17,10 +17,8 @@ class ClickUpTaskDomainServiceTest extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->clickUpTaskDomainService = $this->getContainer()
-            ->make(ClickUpTaskDomainService::class);
-        $this->mockDiscordMessage = $this->getContainer()
-            ->make(MockDiscordMessage::class);
+        $this->clickUpTaskDomainService = $this->make(ClickUpTaskDomainService::class);
+        $this->mockDiscordMessage = $this->make(MockDiscordMessage::class);
     }
 
     public function testCreateClickUpDraftTaskByDiscordMessage(): void
@@ -43,7 +41,7 @@ https://example.org/test2.png',
         );
         $this->assertSame(
             '2021-12-14T00:00:00+00:00',
-            $actual->clickUpTaskDueDate->toIso8601String()
+            $actual->clickUpTaskDueDate?->toIso8601String()
         );
         $this->assertSame(
             '藍井すずしか好きじゃねぇ',

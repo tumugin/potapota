@@ -15,7 +15,7 @@ class ApplicationSettingsRepositoryImplTest extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->applicationSettingsRepositoryImpl = $this->getContainer()->make(
+        $this->applicationSettingsRepositoryImpl = $this->make(
             ApplicationSettingsRepositoryImpl::class
         );
     }

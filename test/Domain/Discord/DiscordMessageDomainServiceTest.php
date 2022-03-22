@@ -18,15 +18,12 @@ class DiscordMessageDomainServiceTest extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->discordMessageDomainService = $this->getContainer()
-            ->make(DiscordMessageDomainService::class);
-        $this->mockDiscordMessage = $this->getContainer()
-            ->make(MockDiscordMessage::class);
-        $this->mockClickUpTask = $this->getContainer()
-            ->make(MockClickUpTask::class);
+        $this->discordMessageDomainService = $this->make(DiscordMessageDomainService::class);
+        $this->mockDiscordMessage = $this->make(MockDiscordMessage::class);
+        $this->mockClickUpTask = $this->make(MockClickUpTask::class);
     }
 
-    public function testCreateDiscordDraftMessageByClickUpTask()
+    public function testCreateDiscordDraftMessageByClickUpTask(): void
     {
         $actual = $this->discordMessageDomainService
             ->createDiscordDraftMessageByClickUpTask(

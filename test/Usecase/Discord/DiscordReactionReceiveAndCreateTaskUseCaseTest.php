@@ -90,14 +90,14 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
             $mockDiscordMessageRepository
         );
 
-        $useCase = $this->getContainer()->make(DiscordReactionReceiveAndCreateTaskUseCase::class);
+        $useCase = $this->make(DiscordReactionReceiveAndCreateTaskUseCase::class);
         $useCase->onReceiveEmoji(
             $this->createMockDiscordMessageShouldCreateTask()
         );
     }
 
     /**
-     * @dataProvider providesMockDiscordMessageShouldNotCreateTask
+     * @dataProvider provideOnReceiveEmojiShouldNotCreateTask
      */
     public function testOnReceiveEmojiShouldNotCreateTask(DiscordMessage $discordMessage): void
     {
@@ -120,13 +120,16 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
             $mockDiscordMessageRepository
         );
 
-        $useCase = $this->getContainer()->make(DiscordReactionReceiveAndCreateTaskUseCase::class);
+        $useCase = $this->make(DiscordReactionReceiveAndCreateTaskUseCase::class);
         $useCase->onReceiveEmoji(
             $discordMessage
         );
     }
 
-    private function providesMockDiscordMessageShouldNotCreateTask(): array
+    /**
+     * @phpstan-return array{0:DiscordMessage}[]
+     */
+    public function provideOnReceiveEmojiShouldNotCreateTask(): array
     {
         return [
             [

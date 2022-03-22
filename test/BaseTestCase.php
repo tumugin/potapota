@@ -37,4 +37,14 @@ class BaseTestCase extends TestCase
     {
         return $this->container;
     }
+
+    /**
+     * @template C
+     * @phpstan-param class-string<C> $class
+     * @phpstan-return C
+     */
+    protected function make(string $class)
+    {
+        return $this->getContainer()->make($class);
+    }
 }

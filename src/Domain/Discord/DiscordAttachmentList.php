@@ -10,8 +10,9 @@ use Tumugin\Stannum\SnString;
 
 /**
  * @extends SnList<DiscordAttachment>
+ * @method static DiscordAttachmentList byArray(DiscordAttachment[] $value)
  */
-class DiscordAttachmentList extends SnList
+final class DiscordAttachmentList extends SnList
 {
     public function toSnString(): SnString
     {
