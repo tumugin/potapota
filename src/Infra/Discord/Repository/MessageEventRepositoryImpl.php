@@ -9,7 +9,7 @@ use Discord\Parts\Channel\Reaction;
 use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
 use Psr\Log\LoggerInterface;
-use React\Promise\PromiseInterface;
+use React\Promise\Promise;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
@@ -26,6 +26,7 @@ use Tumugin\Potapota\Domain\Discord\DiscordReactionCount;
 use Tumugin\Potapota\Domain\Discord\DiscordReactionEmoji;
 use Tumugin\Potapota\Domain\Discord\DiscordReactionList;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
+use Tumugin\Potapota\Domain\Exceptions\PotapotaUnexpectedConditionException;
 use Tumugin\Potapota\Infra\ExceptionLogger\ExceptionLogger;
 use Tumugin\Stannum\SnList;
 
@@ -59,12 +60,16 @@ class MessageEventRepositoryImpl implements MessageEventRepository
     private function onEmojiReactionEventHandler(
         MessageReaction $reaction,
         callable $onEmojiReactionEvent
-    ): PromiseInterface {
-        return $reaction->fetch()
+    ): Promise {
+        /**
+         * @var Promise $result
+         */
+        $result = $reaction->fetch()
             ->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
                 $this->logger->info('Loaded message.');
                 $onEmojiReactionEvent($this->processMessageReaction($reaction));
             });
+        return $result;
     }
 
     private function processMessageReaction(MessageReaction $reaction): DiscordMessage
@@ -97,8 +102,16 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             ),
             DiscordMessageId::byString($reaction->message_id),
             new DiscordMessageAuthor(
-                DiscordMessageAuthorId::byString($reaction->message->author->id),
-                DiscordMessageAuthorName::byString($reaction->message->author->username),
+                DiscordMessageAuthorId::byString(
+                    $reaction->message->author?->id ?: throw new PotapotaUnexpectedConditionException(
+                        'message author should not be null.'
+                    )
+                ),
+                DiscordMessageAuthorName::byString(
+                    $reaction->message->author?->username ?: throw new PotapotaUnexpectedConditionException(
+                        'message author should not be null.'
+                    )
+                ),
             ),
             DiscordAttachmentList::byArray($convertedAttachmentArray),
             DiscordReactionList::byArray($convertedReactionsArray),

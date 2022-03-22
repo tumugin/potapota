@@ -6,6 +6,9 @@ namespace Tumugin\Potapota\Domain\Discord;
 
 use Tumugin\Stannum\SnList;
 
+/**
+ * @extends SnList<DiscordReaction>
+ */
 class DiscordReactionList extends SnList
 {
     public function findReactionByEmoji(DiscordReactionEmoji $discordReactionEmoji): ?DiscordReaction

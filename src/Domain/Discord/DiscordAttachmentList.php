@@ -8,6 +8,9 @@ use Tumugin\Stannum\SnList;
 use Tumugin\Stannum\SnList\SnStringList;
 use Tumugin\Stannum\SnString;
 
+/**
+ * @extends SnList<DiscordAttachment>
+ */
 class DiscordAttachmentList extends SnList
 {
     public function toSnString(): SnString
