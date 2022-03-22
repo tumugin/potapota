@@ -9,13 +9,19 @@ use Tumugin\Potapota\Logger\LoggerSettings;
 
 class Entrypoint
 {
-    public static function main()
+    public static function main(): void
     {
         $container = Container::createContainer();
 
+        /**
+         * @var LoggerSettings $loggerSettings
+         */
         $loggerSettings = $container->get(LoggerSettings::class);
         $loggerSettings->setup();
 
+        /**
+         * @var Main $main
+         */
         $main = $container->get(Main::class);
         $main->execute();
     }

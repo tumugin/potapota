@@ -7,6 +7,7 @@ namespace Tumugin\Potapota\Infra\Discord\Repository;
 use Discord\Discord;
 use Tumugin\Potapota\Domain\Discord\DiscordDraftMessage;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageRepository;
+use Tumugin\Potapota\Domain\Exceptions\PotapotaUnexpectedConditionException;
 
 class DiscordMessageRepositoryImpl implements DiscordMessageRepository
 {
@@ -20,6 +21,11 @@ class DiscordMessageRepositoryImpl implements DiscordMessageRepository
     public function createMessage(DiscordDraftMessage $discordDraftMessage): void
     {
         $channel = $this->discord->getChannel($discordDraftMessage->discordChannelId->toString());
+
+        if ($channel === null) {
+            throw new PotapotaUnexpectedConditionException('$channel cannot be null.');
+        }
+
         $channel->sendMessage($discordDraftMessage->discordMessageContent->toString())
             ->done();
     }

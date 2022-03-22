@@ -28,7 +28,7 @@ class Main
         $this->errorReporter = $errorReporter;
     }
 
-    public function execute()
+    public function execute(): void
     {
         $this->logger->info("Potapota started.");
         $this->errorReporter->registerErrorReporter();

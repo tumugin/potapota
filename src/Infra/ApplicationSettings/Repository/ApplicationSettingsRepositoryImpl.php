@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Infra\ApplicationSettings\Repository;
 
+use Assert\AssertionFailedException;
 use Symfony\Component\Dotenv\Dotenv;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
@@ -14,20 +15,41 @@ use Tumugin\Potapota\Domain\Application\ClickUpSettingMap;
 use Tumugin\Potapota\Domain\Application\DiscordToken;
 use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Application\SentryDsn;
+use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
+use Tumugin\Potapota\Domain\Exceptions\SettingException;
 
 class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
 {
+    /**
+     * @throws AssertionFailedException
+     * @throws RequiredEnvNotFoundException
+     * @throws SettingException
+     */
     public function getApplicationSettings(): ApplicationSettings
     {
         $this->loadEnv();
         return new ApplicationSettings(
-            DiscordToken::byString(getenv('DISCORD_TOKEN')),
-            DiscordTriggerEmoji::byString(getenv('DISCORD_TRIGGER_EMOJI')),
+            DiscordToken::byString(
+                getenv('DISCORD_TOKEN') ?: throw new RequiredEnvNotFoundException(
+                    'Required env DISCORD_TOKEN not found.'
+                )
+            ),
+            DiscordTriggerEmoji::byString(
+                getenv('DISCORD_TRIGGER_EMOJI') ?: throw new RequiredEnvNotFoundException(
+                    'Required env DISCORD_TRIGGER_EMOJI not found.'
+                )
+            ),
             $this->createClickUpSettingMapByEnv(getenv()),
             getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null
         );
     }
 
+    /**
+     * @param array<string, string> $envValues
+     * @return ClickUpSettingMap
+     * @throws AssertionFailedException
+     * @throws SettingException
+     */
     public function createClickUpSettingMapByEnv(array $envValues): ClickUpSettingMap
     {
         $guildIds = $this->getGuildIdsFromSetting($envValues);
@@ -45,6 +67,7 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
     }
 
     /**
+     * @param array<string, string> $envValues
      * @return string[]
      */
     private function getGuildIdsFromSetting(array $envValues): array

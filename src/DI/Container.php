@@ -37,11 +37,14 @@ class Container
         return $containerBuilder->build();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private static function getDefinitions(): array
     {
         return [
             // Library
-            Application::class => factory(Application::class),
+            Application::class => factory(fn() => new Application()),
             LoggerInterface::class => factory(fn() => new Logger('potapota')),
             Logger::class => get(LoggerInterface::class),
             Main::class => autowire(Main::class),
