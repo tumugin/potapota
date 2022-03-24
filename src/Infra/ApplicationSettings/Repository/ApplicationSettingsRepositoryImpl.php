@@ -17,7 +17,6 @@ use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Application\SentryDsn;
 use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
 use Tumugin\Potapota\Domain\Exceptions\SettingException;
-use Tumugin\Stannum\SnList;
 use Tumugin\Stannum\SnList\SnStringList;
 use Tumugin\Stannum\SnString;
 

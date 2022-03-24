@@ -9,8 +9,10 @@ use Discord\Parts\Channel\Attachment;
 use Discord\Parts\Channel\Reaction;
 use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
+use Exception;
 use Psr\Log\LoggerInterface;
 use React\Promise\Promise;
+use RuntimeException;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
@@ -51,7 +53,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
                 $this->onEmojiReactionEventHandler($reaction, $onEmojiReactionEvent)
                     ->otherwise(
-                        fn(\Exception $ex) => $this->exceptionLogger->logExceptionError($ex)
+                        fn(Exception $ex) => $this->exceptionLogger->logExceptionError($ex)
                     )
                     ->done();
             }
@@ -76,7 +78,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
     private function processMessageReaction(MessageReaction $reaction): DiscordMessage
     {
         if ($reaction->isPartial()) {
-            throw new \RuntimeException('message should not be partial.');
+            throw new RuntimeException('message should not be partial.');
         }
 
         $message = $reaction->message

@@ -7,6 +7,8 @@ namespace Tumugin\Potapota\Infra\Application;
 use Psr\Log\LoggerInterface;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
 
+use function Sentry\init;
+
 class ErrorReporter
 {
     private ApplicationSettings $applicationSettings;
@@ -25,7 +27,7 @@ class ErrorReporter
             return;
         }
 
-        \Sentry\init(['dsn' => $this->applicationSettings->sentryDsn->toString()]);
+        init(['dsn' => $this->applicationSettings->sentryDsn->toString()]);
 
         $this->logger->info('Error reporter registered.');
     }
