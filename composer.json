@@ -5,7 +5,7 @@
     "php": "^8.1",
     "tumugin/stannum": "^0.5.0",
     "howyi/clickup-php": "^1.0",
-    "team-reflex/discord-php": "^6.0",
+    "team-reflex/discord-php": "^7.0.5",
     "symfony/console": "^6.0",
     "symfony/dotenv": "^6.0",
     "php-di/php-di": "^6.3",

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Infra\Discord\Repository;
 
 use Discord\Discord;
+use Discord\Parts\Channel\Attachment;
 use Discord\Parts\Channel\Reaction;
 use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
@@ -78,44 +79,49 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             throw new \RuntimeException('message should not be partial.');
         }
 
-        $convertedReactionsArray = $reaction->message
+        $message = $reaction->message
+            ?: throw new PotapotaUnexpectedConditionException('message should not be null.');
+
+        $convertedReactions = $message
             ->reactions
             ->map(fn(Reaction $reaction) => new DiscordReaction(
                 DiscordReactionEmoji::byString($reaction->emoji->name),
                 DiscordReactionCount::byInt($reaction->count),
-            ))
-            ->toArray();
+            ));
 
-        $convertedAttachmentArray = SnList::byArray($reaction->message->attachments)
+        $convertedAttachment = SnList::byArray($message->attachments->toArray())
             ->map(
-                fn(\stdClass $rawAttachment) => new DiscordAttachment(
+                fn(Attachment $rawAttachment) => new DiscordAttachment(
                     DiscordAttachmentUrl::byString($rawAttachment->url)
                 )
-            )
-            ->toArray();
+            );
 
         // FIXME: なぜかURLだけ含むメッセージはmessage->contentがnullになるケースがあるので塞ぐ
         return new DiscordMessage(
             DiscordChannelId::byString($reaction->channel_id),
             DiscordMessageContent::byString(
-                $reaction->message->content ?? ''
+                $message->content ?? ''
             ),
             DiscordMessageId::byString($reaction->message_id),
             new DiscordMessageAuthor(
                 DiscordMessageAuthorId::byString(
-                    $reaction->message->author?->id ?: throw new PotapotaUnexpectedConditionException(
+                    $message->author?->id ?: throw new PotapotaUnexpectedConditionException(
                         'message author should not be null.'
                     )
                 ),
                 DiscordMessageAuthorName::byString(
-                    $reaction->message->author?->username ?: throw new PotapotaUnexpectedConditionException(
+                    $message->author?->username ?: throw new PotapotaUnexpectedConditionException(
                         'message author should not be null.'
                     )
                 ),
             ),
-            DiscordAttachmentList::byArray($convertedAttachmentArray),
-            DiscordReactionList::byArray($convertedReactionsArray),
-            DiscordGuildId::byString($reaction->guild_id)
+            DiscordAttachmentList::byArray($convertedAttachment->toArray()),
+            DiscordReactionList::byArray($convertedReactions->toArray()),
+            DiscordGuildId::byString(
+                $message->guild_id ?: throw new PotapotaUnexpectedConditionException(
+                    'guild_id should not be null.'
+                )
+            )
         );
     }
 }
