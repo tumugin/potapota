@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Infra\ExceptionLogger;
 
+use Exception;
 use Monolog\Logger;
 
 use function Sentry\captureException;
@@ -17,7 +18,7 @@ class ExceptionLogger
         $this->logger = $logger;
     }
 
-    public function logExceptionError(\Exception $exception): void
+    public function logExceptionError(Exception $exception): void
     {
         $this->logger->error($exception);
         captureException($exception);

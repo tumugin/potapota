@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Domain\Exceptions;
 
-class RequiredEnvNotFoundException extends \Exception
+use Exception;
+
+class RequiredEnvNotFoundException extends Exception
 {
 }
