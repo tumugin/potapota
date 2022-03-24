@@ -17,6 +17,9 @@ use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Application\SentryDsn;
 use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
 use Tumugin\Potapota\Domain\Exceptions\SettingException;
+use Tumugin\Stannum\SnList;
+use Tumugin\Stannum\SnList\SnStringList;
+use Tumugin\Stannum\SnString;
 
 class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
 {
@@ -60,7 +63,7 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
                 ClickUpAPIToken::byString($envValues["GUILD_ID_{$guildId}_CLICKUP_API_TOKEN"]),
                 ClickUpListId::byString($envValues["GUILD_ID_{$guildId}_CLICKUP_LIST_ID"])
             );
-            $baseMapValues[$guildId] = $clickUpSetting;
+            $baseMapValues[$guildId->toString()] = $clickUpSetting;
         }
 
         return new ClickUpSettingMap($baseMapValues);
@@ -68,20 +71,22 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
 
     /**
      * @param array<string, string> $envValues
-     * @return string[]
      */
-    private function getGuildIdsFromSetting(array $envValues): array
+    private function getGuildIdsFromSetting(array $envValues): SnStringList
     {
-        $discordGuildIds = [];
-        foreach ($envValues as $key => $_) {
-            $matches = [];
-            preg_match('/^GUILD_ID_([0-9]+)_/u', $key, $matches);
-            if (isset($matches[1])) {
-                $discordGuildIds[] = $matches[1];
-            }
-        }
+        /**
+         * @var SnStringList $result
+         */
+        $result = SnStringList::byStringArray(array_keys($envValues))
+            ->map(
+                fn(SnString $str) => $str
+                    ->pregMatchAll(SnString::byString('/^GUILD_ID_([0-9]+)_/u'))
+                    ?->getMatchGroups()
+                    ->first()
+            )
+            ->filter(fn(?Snstring $str) => !is_null($str));
 
-        return $discordGuildIds;
+        return $result;
     }
 
     private function loadEnv(): void
