@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Infra\Discord\Repository;
 
+use Discord\Builders\MessageBuilder;
 use Discord\Discord;
 use Tumugin\Potapota\Domain\Discord\DiscordDraftMessage;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageRepository;
@@ -26,7 +27,8 @@ class DiscordMessageRepositoryImpl implements DiscordMessageRepository
             throw new PotapotaUnexpectedConditionException('$channel cannot be null.');
         }
 
-        $channel->sendMessage($discordDraftMessage->discordMessageContent->toString())
-            ->done();
+        $channel->sendMessage(
+            MessageBuilder::new()->setContent($discordDraftMessage->discordMessageContent->toString())
+        )->done();
     }
 }
