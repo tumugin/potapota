@@ -11,7 +11,7 @@ use Discord\Parts\WebSockets\MessageReaction;
 use Discord\WebSockets\Event;
 use Exception;
 use Psr\Log\LoggerInterface;
-use React\Promise\Promise;
+use React\Promise\ExtendedPromiseInterface;
 use RuntimeException;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
@@ -63,9 +63,9 @@ class MessageEventRepositoryImpl implements MessageEventRepository
     private function onEmojiReactionEventHandler(
         MessageReaction $reaction,
         callable $onEmojiReactionEvent
-    ): Promise {
+    ): ExtendedPromiseInterface {
         /**
-         * @var Promise $result
+         * @var ExtendedPromiseInterface $result
          */
         $result = $reaction->fetch()
             ->then(function (MessageReaction $reaction) use (&$onEmojiReactionEvent) {
@@ -120,7 +120,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             DiscordAttachmentList::byArray($convertedAttachment->toArray()),
             DiscordReactionList::byArray($convertedReactions->toArray()),
             DiscordGuildId::byString(
-                $message->guild_id ?: throw new PotapotaUnexpectedConditionException(
+                $message->channel?->guild_id ?: throw new PotapotaUnexpectedConditionException(
                     'guild_id should not be null.'
                 )
             )
