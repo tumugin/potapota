@@ -73,19 +73,15 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
      */
     private function getGuildIdsFromSetting(array $envValues): SnStringList
     {
-        /**
-         * @var SnStringList $result
-         */
-        $result = SnStringList::byStringArray(array_keys($envValues))
+        return SnStringList::byStringArray(array_keys($envValues))
             ->map(
                 fn(SnString $str) => $str
                     ->pregMatchAll(SnString::byString('/^GUILD_ID_([0-9]+)_/u'))
                     ?->getMatchGroups()
                     ->first()
             )
-            ->filter(fn(?Snstring $str) => !is_null($str));
-
-        return $result;
+            ->filter(fn(?Snstring $str) => !is_null($str))
+            ->toSnStringList();
     }
 
     private function loadEnv(): void
