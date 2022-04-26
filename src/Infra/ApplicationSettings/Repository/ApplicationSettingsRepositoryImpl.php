@@ -15,8 +15,12 @@ use Tumugin\Potapota\Domain\ClickUp\ClickUpSettingMap;
 use Tumugin\Potapota\Domain\Discord\DiscordToken;
 use Tumugin\Potapota\Domain\Discord\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
-use Tumugin\Potapota\Domain\Exceptions\SettingException;
 use Tumugin\Potapota\Domain\Sentry\SentryDsn;
+use Tumugin\Potapota\Domain\Trello\TrelloAPIKey;
+use Tumugin\Potapota\Domain\Trello\TrelloAPIToken;
+use Tumugin\Potapota\Domain\Trello\TrelloListId;
+use Tumugin\Potapota\Domain\Trello\TrelloSetting;
+use Tumugin\Potapota\Domain\Trello\TrelloSettingMap;
 use Tumugin\Stannum\SnList\SnStringList;
 use Tumugin\Stannum\SnString;
 
@@ -25,7 +29,6 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
     /**
      * @throws AssertionFailedException
      * @throws RequiredEnvNotFoundException
-     * @throws SettingException
      */
     public function getApplicationSettings(): ApplicationSettings
     {
@@ -42,6 +45,7 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
                 )
             ),
             $this->createClickUpSettingMapByEnv(getenv()),
+            $this->createTrelloSettingMapByEnv(getenv()),
             getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null
         );
     }
@@ -50,7 +54,6 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
      * @param array<string, string> $envValues
      * @return ClickUpSettingMap
      * @throws AssertionFailedException
-     * @throws SettingException
      */
     public function createClickUpSettingMapByEnv(array $envValues): ClickUpSettingMap
     {
@@ -66,6 +69,28 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         }
 
         return new ClickUpSettingMap($baseMapValues);
+    }
+
+    /**
+     * @param array<string, string> $envValues
+     * @return TrelloSettingMap
+     * @throws AssertionFailedException
+     */
+    public function createTrelloSettingMapByEnv(array $envValues): TrelloSettingMap
+    {
+        $guildIds = $this->getGuildIdsFromSetting($envValues);
+        $baseMapValues = [];
+
+        foreach ($guildIds as $guildId) {
+            $trelloSetting = new TrelloSetting(
+                TrelloAPIKey::byString($envValues["GUILD_ID_{$guildId}_TRELLO_API_KEY"]),
+                TrelloAPIToken::byString($envValues["GUILD_ID_{$guildId}_TRELLO_API_TOKEN"]),
+                TrelloListId::byString($envValues["GUILD_ID_{$guildId}_TRELLO_LIST_ID"]),
+            );
+            $baseMapValues[$guildId->toString()] = $trelloSetting;
+        }
+
+        return new TrelloSettingMap($baseMapValues);
     }
 
     /**

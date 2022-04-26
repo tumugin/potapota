@@ -35,6 +35,7 @@ use Tumugin\Potapota\Domain\Discord\DiscordReactionList;
 use Tumugin\Potapota\Domain\Discord\DiscordToken;
 use Tumugin\Potapota\Domain\Discord\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
+use Tumugin\Potapota\Domain\Trello\TrelloSettingMap;
 use Tumugin\Potapota\Test\BaseTestCase;
 use Tumugin\Potapota\Usecase\Discord\DiscordReactionReceiveAndCreateTaskUseCase;
 
@@ -55,6 +56,7 @@ class DiscordReactionReceiveAndCreateTaskUseCaseTest extends BaseTestCase
                     ClickUpListId::byString('123')
                 ),
             ]),
+            new TrelloSettingMap([]),
             null
         );
         $this->getContainer()->set(
