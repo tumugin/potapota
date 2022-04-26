@@ -54,10 +54,10 @@ class Container
             Discord::class => fn(
                 ApplicationSettings $applicationSettings,
                 LoggerInterface $logger
-            ) => new Discord([
+            ) => getenv('APP_ENV') !== 'test' ? new Discord([
                 'token' => $applicationSettings->discordToken->toString(),
                 'logger' => $logger,
-            ]),
+            ]) : null,
             // Domain
             ApplicationSettings::class => fn(
                 ApplicationSettingsRepository $applicationSettingsRepository
