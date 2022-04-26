@@ -64,6 +64,12 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         $baseMapValues = [];
 
         foreach ($guildIds as $guildId) {
+            $settingExists = isset($envValues["GUILD_ID_{$guildId}_CLICKUP_API_TOKEN"])
+                && isset($envValues["GUILD_ID_{$guildId}_CLICKUP_LIST_ID"]);
+            if (!$settingExists) {
+                continue;
+            }
+
             $clickUpSetting = new ClickUpSetting(
                 ClickUpAPIToken::byString($envValues["GUILD_ID_{$guildId}_CLICKUP_API_TOKEN"]),
                 ClickUpListId::byString($envValues["GUILD_ID_{$guildId}_CLICKUP_LIST_ID"])
@@ -85,6 +91,13 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         $baseMapValues = [];
 
         foreach ($guildIds as $guildId) {
+            $settingExists = isset($envValues["GUILD_ID_{$guildId}_TRELLO_API_KEY"]) &&
+                isset($envValues["GUILD_ID_{$guildId}_TRELLO_API_TOKEN"]) &&
+                isset($envValues["GUILD_ID_{$guildId}_TRELLO_LIST_ID"]);
+            if (!$settingExists) {
+                continue;
+            }
+
             $trelloSetting = new TrelloSetting(
                 TrelloAPIKey::byString($envValues["GUILD_ID_{$guildId}_TRELLO_API_KEY"]),
                 TrelloAPIToken::byString($envValues["GUILD_ID_{$guildId}_TRELLO_API_TOKEN"]),
