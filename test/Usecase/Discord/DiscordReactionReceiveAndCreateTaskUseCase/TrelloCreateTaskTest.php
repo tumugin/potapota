@@ -7,7 +7,6 @@ namespace Tumugin\Potapota\Test\Usecase\Discord\DiscordReactionReceiveAndCreateT
 use Mockery;
 use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpSettingMap;
-use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachment;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentList;
 use Tumugin\Potapota\Domain\Discord\DiscordAttachmentUrl;
