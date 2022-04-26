@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Domain\Discord;
 
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTask;
+use Tumugin\Potapota\Domain\Trello\TrelloTask;
 
 class DiscordMessageDomainService
 {
@@ -22,6 +23,25 @@ class DiscordMessageDomainService
                 "タスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
                 "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
                 "ClickUp: {$taskUrl}\n" .
+                "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
+            )
+        );
+    }
+
+    public function createDiscordDraftMessageByTrelloTask(
+        DiscordMessage $discordMessage,
+        TrelloTask $trelloTask
+    ): DiscordDraftMessage {
+        $taskUrl = $trelloTask->trelloTaskUrl->toString();
+        $taskTitle = $trelloTask->trelloTaskName->toString();
+
+        return new DiscordDraftMessage(
+            $discordMessage->discordChannelId,
+            DiscordMessageContent::byString(
+                "タスクを作ったよ～～～！！！\n" .
+                "タスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
+                "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
+                "Trello: {$taskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
         );

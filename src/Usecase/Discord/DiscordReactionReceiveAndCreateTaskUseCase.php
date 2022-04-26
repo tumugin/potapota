@@ -6,11 +6,8 @@ namespace Tumugin\Potapota\Usecase\Discord;
 
 use Psr\Log\LoggerInterface;
 use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
-use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
-use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
+use Tumugin\Potapota\Domain\BaseTask\BaseTaskDomainService;
 use Tumugin\Potapota\Domain\Discord\DiscordMessage;
-use Tumugin\Potapota\Domain\Discord\DiscordMessageDomainService;
-use Tumugin\Potapota\Domain\Discord\DiscordMessageRepository;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
 use Tumugin\Stannum\SnInteger;
 
@@ -18,25 +15,19 @@ class DiscordReactionReceiveAndCreateTaskUseCase
 {
     private MessageEventRepository $messageEventRepository;
     private ApplicationSettings $applicationSettings;
-    private ClickUpTaskRepository $clickUpTaskRepository;
-    private DiscordMessageDomainService $discordMessageDomainService;
-    private DiscordMessageRepository $discordMessageRepository;
     private LoggerInterface $logger;
+    private BaseTaskDomainService $baseTaskDomainService;
 
     public function __construct(
         MessageEventRepository $messageEventRepository,
         ApplicationSettings $applicationSettings,
-        ClickUpTaskRepository $clickUpTaskRepository,
-        DiscordMessageDomainService $discordMessageDomainService,
-        DiscordMessageRepository $discordMessageRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        BaseTaskDomainService $baseTaskDomainService
     ) {
         $this->messageEventRepository = $messageEventRepository;
         $this->applicationSettings = $applicationSettings;
-        $this->clickUpTaskRepository = $clickUpTaskRepository;
-        $this->discordMessageDomainService = $discordMessageDomainService;
-        $this->discordMessageRepository = $discordMessageRepository;
         $this->logger = $logger;
+        $this->baseTaskDomainService = $baseTaskDomainService;
     }
 
     public function listenOnReceiveEmoji(): void
@@ -68,28 +59,15 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         }
 
         if (
-            !$this->applicationSettings->clickUpSettingMap->settingsOfDiscordGuildIdExists(
+            !$this->applicationSettings->checkDiscordGuildHasSetting(
                 $discordMessage->discordGuildId
             )
         ) {
-            $this->logger->error("ClickUp setting for this guild({$discordMessage->discordGuildId}) not found.");
+            $this->logger->error("Task service setting for this guild({$discordMessage->discordGuildId}) not found.");
             return;
         }
 
-        // タスクを作成する
-        $createdTask = $this->clickUpTaskRepository->createClickUpTask(
-            $discordMessage->discordGuildId,
-            ClickUpDraftTask::createClickUpDraftTaskByDiscordMessage($discordMessage)
-        );
-        $this->logger->info('ClickUp task created.');
-
-        // 作成されたタスクのリンクを送信する
-        $this->discordMessageRepository->createMessage(
-            $this->discordMessageDomainService->createDiscordDraftMessageByClickUpTask(
-                $discordMessage,
-                $createdTask
-            )
-        );
-        $this->logger->info('Message sent.');
+        // Create task and send message
+        $this->baseTaskDomainService->createTaskAndSendDiscordMessage($discordMessage);
     }
 }
