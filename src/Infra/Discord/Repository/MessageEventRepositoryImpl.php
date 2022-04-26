@@ -112,7 +112,7 @@ class MessageEventRepositoryImpl implements MessageEventRepository
                     )
                 ),
                 DiscordMessageAuthorName::byString(
-                    $message->author?->username ?: throw new PotapotaUnexpectedConditionException(
+                    $message->author->username ?: throw new PotapotaUnexpectedConditionException(
                         'message author should not be null.'
                     )
                 ),
