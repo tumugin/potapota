@@ -7,7 +7,6 @@ namespace Tumugin\Potapota\Infra\Trello\Repository;
 use GuzzleHttp\Client;
 use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
 use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
-use Tumugin\Potapota\Domain\Exceptions\PotapotaUnexpectedConditionException;
 use Tumugin\Potapota\Domain\Trello\TrelloDraftTask;
 use Tumugin\Potapota\Domain\Trello\TrelloSetting;
 use Tumugin\Potapota\Domain\Trello\TrelloTask;
@@ -51,18 +50,15 @@ class TrelloTaskRepositoryImpl implements TrelloTaskRepository
             ->getBody()
             ->getContents();
 
-        $result = json_decode($rawResult, associative: false, flags: JSON_THROW_ON_ERROR);
-
-        if (!is_object($result)) {
-            throw new PotapotaUnexpectedConditionException('Result must not be non object value.');
-        }
+        /** @var array{id:string,url:string} $result */
+        $result = json_decode($rawResult, associative: true, flags: JSON_THROW_ON_ERROR);
 
         return new TrelloTask(
-            TrelloTaskId::byString($result->id),
+            TrelloTaskId::byString($result['id']),
             $trelloDraftTask->trelloTaskName,
             $trelloDraftTask->trelloTaskDescription,
             $trelloDraftTask->trelloTaskDueDate,
-            TrelloTaskUrl::byString($result->url)
+            TrelloTaskUrl::byString($result['url'])
         );
     }
 }
