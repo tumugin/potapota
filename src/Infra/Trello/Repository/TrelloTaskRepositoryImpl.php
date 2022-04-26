@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Infra\Trello\Repository;
 
-use Trello\Client;
+use GuzzleHttp\Client;
 use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
 use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
+use Tumugin\Potapota\Domain\Exceptions\PotapotaUnexpectedConditionException;
 use Tumugin\Potapota\Domain\Trello\TrelloDraftTask;
 use Tumugin\Potapota\Domain\Trello\TrelloSetting;
 use Tumugin\Potapota\Domain\Trello\TrelloTask;
@@ -31,25 +32,37 @@ class TrelloTaskRepositoryImpl implements TrelloTaskRepository
         $setting = $this->applicationSettings->trelloSettingMap->getSettingByDiscordGuildId($discordGuildId);
 
         $client = new Client();
-        $client->authenticate(
-            $setting->trelloAPIKey->toString(),
-            $setting->trelloAPIToken->toString(),
-            Client::AUTH_URL_CLIENT_ID
-        );
 
-        $result = $client->cards()->create([
-            'idList' => $setting->trelloListId->toString(),
-            'name' => $trelloDraftTask->trelloTaskName->toString(),
-            'due' => $trelloDraftTask->trelloTaskDueDate?->toIso8601String(),
-            'desc' => $trelloDraftTask->trelloTaskDescription->toString(),
-        ]);
+        $rawResult = $client->post(
+            'https://api.trello.com/1/cards',
+            [
+                'query' => [
+                    'idList' => $setting->trelloListId->toString(),
+                    'key' => $setting->trelloAPIKey->toString(),
+                    'token' => $setting->trelloAPIToken->toString(),
+                ],
+                'json' => [
+                    'name' => $trelloDraftTask->trelloTaskName->toString(),
+                    'due' => $trelloDraftTask->trelloTaskDueDate?->toIso8601String(),
+                    'desc' => $trelloDraftTask->trelloTaskDescription->toString(),
+                ],
+            ]
+        )
+            ->getBody()
+            ->getContents();
+
+        $result = json_decode($rawResult, associative: false, flags: JSON_THROW_ON_ERROR);
+
+        if (!is_object($result)) {
+            throw new PotapotaUnexpectedConditionException('Result must not be non object value.');
+        }
 
         return new TrelloTask(
-            TrelloTaskId::byString($result['id']),
+            TrelloTaskId::byString($result->id),
             $trelloDraftTask->trelloTaskName,
             $trelloDraftTask->trelloTaskDescription,
             $trelloDraftTask->trelloTaskDueDate,
-            TrelloTaskUrl::byString($result['url'])
+            TrelloTaskUrl::byString($result->url)
         );
     }
 }

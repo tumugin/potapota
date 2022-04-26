@@ -13,7 +13,7 @@
     "bramus/monolog-colored-line-formatter": "^3.0",
     "nesbot/carbon": "^2.56",
     "sentry/sdk": "^3.1",
-    "cdaguerre/php-trello-api": "@dev"
+    "guzzlehttp/guzzle": "^7.4"
   },
   "license": "MIT",
   "autoload": {
