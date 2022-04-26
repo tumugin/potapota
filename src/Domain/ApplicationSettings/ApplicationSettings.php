@@ -2,7 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tumugin\Potapota\Domain\Application;
+namespace Tumugin\Potapota\Domain\ApplicationSettings;
+
+use Tumugin\Potapota\Domain\ClickUp\ClickUpSettingMap;
+use Tumugin\Potapota\Domain\Discord\DiscordToken;
+use Tumugin\Potapota\Domain\Discord\DiscordTriggerEmoji;
+use Tumugin\Potapota\Domain\Sentry\SentryDsn;
 
 class ApplicationSettings
 {

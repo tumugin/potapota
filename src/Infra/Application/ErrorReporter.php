@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Infra\Application;
 
 use Psr\Log\LoggerInterface;
-use Tumugin\Potapota\Domain\Application\ApplicationSettings;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
 
 use function Sentry\init;
 

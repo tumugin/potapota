@@ -6,17 +6,17 @@ namespace Tumugin\Potapota\Infra\ApplicationSettings\Repository;
 
 use Assert\AssertionFailedException;
 use Symfony\Component\Dotenv\Dotenv;
-use Tumugin\Potapota\Domain\Application\ApplicationSettings;
-use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
-use Tumugin\Potapota\Domain\Application\ClickUpAPIToken;
-use Tumugin\Potapota\Domain\Application\ClickUpListId;
-use Tumugin\Potapota\Domain\Application\ClickUpSetting;
-use Tumugin\Potapota\Domain\Application\ClickUpSettingMap;
-use Tumugin\Potapota\Domain\Application\DiscordToken;
-use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
-use Tumugin\Potapota\Domain\Application\SentryDsn;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettingsRepository;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpAPIToken;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpListId;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpSetting;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpSettingMap;
+use Tumugin\Potapota\Domain\Discord\DiscordToken;
+use Tumugin\Potapota\Domain\Discord\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
 use Tumugin\Potapota\Domain\Exceptions\SettingException;
+use Tumugin\Potapota\Domain\Sentry\SentryDsn;
 use Tumugin\Stannum\SnList\SnStringList;
 use Tumugin\Stannum\SnString;
 

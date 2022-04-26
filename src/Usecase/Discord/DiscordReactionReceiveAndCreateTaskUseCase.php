@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Usecase\Discord;
 
 use Psr\Log\LoggerInterface;
-use Tumugin\Potapota\Domain\Application\ApplicationSettings;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordMessage;

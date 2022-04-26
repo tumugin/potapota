@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tumugin\Potapota\Domain\Application;
+namespace Tumugin\Potapota\Domain\ClickUp;
 
 use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
 use Tumugin\Potapota\Domain\Exceptions\SettingException;
