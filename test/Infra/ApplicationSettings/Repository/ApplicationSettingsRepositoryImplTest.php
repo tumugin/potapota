@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Test\Infra\ApplicationSettings\Repository;
 
 use Tumugin\Potapota\Domain\Discord\DiscordGuildId;
+use Tumugin\Potapota\Domain\TaskServiceSelection\TaskServiceSelection;
 use Tumugin\Potapota\Domain\Trello\TrelloSetting;
 use Tumugin\Potapota\Infra\ApplicationSettings\Repository\ApplicationSettingsRepositoryImpl;
 use Tumugin\Potapota\Test\BaseTestCase;
@@ -50,7 +51,7 @@ class ApplicationSettingsRepositoryImplTest extends BaseTestCase
             'GUILD_ID_67890_TRELLO_LIST_ID' => 'listid2',
         ]);
 
-        /** @var TrelloSetting $firstSetting*/
+        /** @var TrelloSetting $firstSetting */
         $firstSetting = $settingMap->getSettingByDiscordGuildId(DiscordGuildId::byString('12345'));
         /** @var TrelloSetting $secondSetting */
         $secondSetting = $settingMap->getSettingByDiscordGuildId(DiscordGuildId::byString('67890'));
@@ -62,5 +63,19 @@ class ApplicationSettingsRepositoryImplTest extends BaseTestCase
         $this->assertSame('apikey2', $secondSetting->trelloAPIKey->toString());
         $this->assertSame('apitoken2', $secondSetting->trelloAPIToken->toString());
         $this->assertSame('listid2', $secondSetting->trelloListId->toString());
+    }
+
+    public function testCreateTaskServiceSelectionSettingMapByEnv(): void
+    {
+        $settingMap = $this->applicationSettingsRepositoryImpl->createTaskServiceSelectionSettingMapByEnv([
+            'GUILD_ID_12345_TASK_SERVICE' => 'clickup',
+            'GUILD_ID_67890_TASK_SERVICE' => 'trello',
+        ]);
+
+        $firstSetting = $settingMap->getSettingByDiscordGuildId(DiscordGuildId::byString('12345'));
+        $secondSetting = $settingMap->getSettingByDiscordGuildId(DiscordGuildId::byString('67890'));
+
+        $this->assertSame(TaskServiceSelection::CLICKUP, $firstSetting);
+        $this->assertSame(TaskServiceSelection::TRELLO, $secondSetting);
     }
 }

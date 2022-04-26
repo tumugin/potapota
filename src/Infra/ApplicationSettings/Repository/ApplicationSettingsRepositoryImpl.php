@@ -16,6 +16,8 @@ use Tumugin\Potapota\Domain\Discord\DiscordToken;
 use Tumugin\Potapota\Domain\Discord\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
 use Tumugin\Potapota\Domain\Sentry\SentryDsn;
+use Tumugin\Potapota\Domain\TaskServiceSelection\TaskServiceSelection;
+use Tumugin\Potapota\Domain\TaskServiceSelection\TaskServiceSelectionSettingMap;
 use Tumugin\Potapota\Domain\Trello\TrelloAPIKey;
 use Tumugin\Potapota\Domain\Trello\TrelloAPIToken;
 use Tumugin\Potapota\Domain\Trello\TrelloListId;
@@ -45,8 +47,9 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
                 )
             ),
             $this->createClickUpSettingMapByEnv(getenv()),
-            $this->createTrelloSettingMapByEnv(getenv()),
-            getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null
+            getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null,
+            $this->createTaskServiceSelectionSettingMapByEnv(getenv()),
+            $this->createTrelloSettingMapByEnv(getenv())
         );
     }
 
@@ -91,6 +94,25 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         }
 
         return new TrelloSettingMap($baseMapValues);
+    }
+
+    /**
+     * @param array<string, string> $envValues
+     * @return TaskServiceSelectionSettingMap
+     */
+    public function createTaskServiceSelectionSettingMapByEnv(array $envValues): TaskServiceSelectionSettingMap
+    {
+        $guildIds = $this->getGuildIdsFromSetting($envValues);
+        $baseMapValues = [];
+
+        foreach ($guildIds as $guildId) {
+            $taskServiceSelection = TaskServiceSelection::createByString(
+                $envValues["GUILD_ID_{$guildId}_TASK_SERVICE"]
+            );
+            $baseMapValues[$guildId->toString()] = $taskServiceSelection;
+        }
+
+        return new TaskServiceSelectionSettingMap($baseMapValues);
     }
 
     /**
