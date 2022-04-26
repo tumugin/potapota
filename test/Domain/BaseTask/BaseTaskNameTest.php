@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tumugin\Potapota\Test\Domain\ClickUp;
+namespace Tumugin\Potapota\Test\Domain\BaseTask;
 
-use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskName;
+use Tumugin\Potapota\Domain\BaseTask\BaseTaskName;
 use Tumugin\Potapota\Test\BaseTestCase;
 
-class ClickUpTaskNameTest extends BaseTestCase
+class BaseTaskNameTest extends BaseTestCase
 {
     /**
      * @dataProvider provideTestRemoveUrlsFromTaskNameStrings
      */
     public function testRemoveUrlsFromTaskName(string $beforeString, string $afterString): void
     {
-        $clickUpTaskName = ClickUpTaskName::byString(
+        $clickUpTaskName = BaseTaskName::byString(
             $beforeString
         );
         $this->assertSame(
@@ -52,7 +52,7 @@ class ClickUpTaskNameTest extends BaseTestCase
 
     public function testRemoveNewLine(): void
     {
-        $clickUpTaskName = ClickUpTaskName::byString(
+        $clickUpTaskName = BaseTaskName::byString(
             "藍井すず\n藤宮めい"
         );
         $this->assertSame(
@@ -63,7 +63,7 @@ class ClickUpTaskNameTest extends BaseTestCase
 
     public function testShortenTaskName(): void
     {
-        $clickUpTaskName = ClickUpTaskName::byString(
+        $clickUpTaskName = BaseTaskName::byString(
             '藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね藤宮めいは可愛いね'
         );
         $this->assertSame(
@@ -77,7 +77,7 @@ class ClickUpTaskNameTest extends BaseTestCase
      */
     public function testAddMudaiTextIfEmptyToTaskName(string $testString): void
     {
-        $clickUpTaskName = ClickUpTaskName::byString($testString);
+        $clickUpTaskName = BaseTaskName::byString($testString);
         $this->assertSame(
             '無題',
             $clickUpTaskName->addMudaiTextIfEmptyToTaskName()->toString()
@@ -98,7 +98,7 @@ class ClickUpTaskNameTest extends BaseTestCase
 
     public function testAddMudaiTextIfEmptyToTaskNameOnNotEmptyCase(): void
     {
-        $clickUpTaskName = ClickUpTaskName::byString('アンスリューム大サーカス');
+        $clickUpTaskName = BaseTaskName::byString('アンスリューム大サーカス');
         $this->assertSame(
             'アンスリューム大サーカス',
             $clickUpTaskName->addMudaiTextIfEmptyToTaskName()->toString()

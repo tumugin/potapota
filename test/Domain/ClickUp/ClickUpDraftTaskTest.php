@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace Tumugin\Potapota\Test\Domain\ClickUp;
 
 use Carbon\Carbon;
-use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskDomainService;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
 use Tumugin\Potapota\Test\BaseTestCase;
 use Tumugin\Potapota\Test\Mock\MockDiscordMessage;
 
-class ClickUpTaskDomainServiceTest extends BaseTestCase
+class ClickUpDraftTaskTest extends BaseTestCase
 {
-    private ClickUpTaskDomainService $clickUpTaskDomainService;
     private MockDiscordMessage $mockDiscordMessage;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->clickUpTaskDomainService = $this->make(ClickUpTaskDomainService::class);
         $this->mockDiscordMessage = $this->make(MockDiscordMessage::class);
     }
 
@@ -25,7 +23,7 @@ class ClickUpTaskDomainServiceTest extends BaseTestCase
     {
         Carbon::setTestNow(new Carbon('2021-12-07T00:00:00Z'));
 
-        $actual = $this->clickUpTaskDomainService->createClickUpDraftTaskByDiscordMessage(
+        $actual = ClickUpDraftTask::createClickUpDraftTaskByDiscordMessage(
             $this->mockDiscordMessage->createMockDiscordMessage()
         );
 

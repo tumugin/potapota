@@ -6,7 +6,7 @@ namespace Tumugin\Potapota\Usecase\Discord;
 
 use Psr\Log\LoggerInterface;
 use Tumugin\Potapota\Domain\Application\ApplicationSettings;
-use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskDomainService;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordMessage;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageDomainService;
@@ -19,7 +19,6 @@ class DiscordReactionReceiveAndCreateTaskUseCase
     private MessageEventRepository $messageEventRepository;
     private ApplicationSettings $applicationSettings;
     private ClickUpTaskRepository $clickUpTaskRepository;
-    private ClickUpTaskDomainService $clickUpTaskDomainService;
     private DiscordMessageDomainService $discordMessageDomainService;
     private DiscordMessageRepository $discordMessageRepository;
     private LoggerInterface $logger;
@@ -28,7 +27,6 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         MessageEventRepository $messageEventRepository,
         ApplicationSettings $applicationSettings,
         ClickUpTaskRepository $clickUpTaskRepository,
-        ClickUpTaskDomainService $clickUpTaskDomainService,
         DiscordMessageDomainService $discordMessageDomainService,
         DiscordMessageRepository $discordMessageRepository,
         LoggerInterface $logger
@@ -36,7 +34,6 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         $this->messageEventRepository = $messageEventRepository;
         $this->applicationSettings = $applicationSettings;
         $this->clickUpTaskRepository = $clickUpTaskRepository;
-        $this->clickUpTaskDomainService = $clickUpTaskDomainService;
         $this->discordMessageDomainService = $discordMessageDomainService;
         $this->discordMessageRepository = $discordMessageRepository;
         $this->logger = $logger;
@@ -82,7 +79,7 @@ class DiscordReactionReceiveAndCreateTaskUseCase
         // タスクを作成する
         $createdTask = $this->clickUpTaskRepository->createClickUpTask(
             $discordMessage->discordGuildId,
-            $this->clickUpTaskDomainService->createClickUpDraftTaskByDiscordMessage($discordMessage)
+            ClickUpDraftTask::createClickUpDraftTaskByDiscordMessage($discordMessage)
         );
         $this->logger->info('ClickUp task created.');
 
