@@ -6,7 +6,7 @@ namespace Tumugin\Potapota\Infra\ClickUp\Repository;
 
 use ClickUp\Client;
 use ClickUp\Objects\TaskList;
-use Tumugin\Potapota\Domain\Application\ApplicationSettings;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpDraftTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTask;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskDescription;

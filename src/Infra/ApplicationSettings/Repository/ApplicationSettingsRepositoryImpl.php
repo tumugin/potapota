@@ -6,17 +6,23 @@ namespace Tumugin\Potapota\Infra\ApplicationSettings\Repository;
 
 use Assert\AssertionFailedException;
 use Symfony\Component\Dotenv\Dotenv;
-use Tumugin\Potapota\Domain\Application\ApplicationSettings;
-use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
-use Tumugin\Potapota\Domain\Application\ClickUpAPIToken;
-use Tumugin\Potapota\Domain\Application\ClickUpListId;
-use Tumugin\Potapota\Domain\Application\ClickUpSetting;
-use Tumugin\Potapota\Domain\Application\ClickUpSettingMap;
-use Tumugin\Potapota\Domain\Application\DiscordToken;
-use Tumugin\Potapota\Domain\Application\DiscordTriggerEmoji;
-use Tumugin\Potapota\Domain\Application\SentryDsn;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettingsRepository;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpAPIToken;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpListId;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpSetting;
+use Tumugin\Potapota\Domain\ClickUp\ClickUpSettingMap;
+use Tumugin\Potapota\Domain\Discord\DiscordToken;
+use Tumugin\Potapota\Domain\Discord\DiscordTriggerEmoji;
 use Tumugin\Potapota\Domain\Exceptions\RequiredEnvNotFoundException;
-use Tumugin\Potapota\Domain\Exceptions\SettingException;
+use Tumugin\Potapota\Domain\Sentry\SentryDsn;
+use Tumugin\Potapota\Domain\TaskServiceSelection\TaskServiceSelection;
+use Tumugin\Potapota\Domain\TaskServiceSelection\TaskServiceSelectionSettingMap;
+use Tumugin\Potapota\Domain\Trello\TrelloAPIKey;
+use Tumugin\Potapota\Domain\Trello\TrelloAPIToken;
+use Tumugin\Potapota\Domain\Trello\TrelloListId;
+use Tumugin\Potapota\Domain\Trello\TrelloSetting;
+use Tumugin\Potapota\Domain\Trello\TrelloSettingMap;
 use Tumugin\Stannum\SnList\SnStringList;
 use Tumugin\Stannum\SnString;
 
@@ -25,7 +31,6 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
     /**
      * @throws AssertionFailedException
      * @throws RequiredEnvNotFoundException
-     * @throws SettingException
      */
     public function getApplicationSettings(): ApplicationSettings
     {
@@ -42,7 +47,9 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
                 )
             ),
             $this->createClickUpSettingMapByEnv(getenv()),
-            getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null
+            getenv('SENTRY_DSN') ? SentryDsn::byString(getenv('SENTRY_DSN')) : null,
+            $this->createTaskServiceSelectionSettingMapByEnv(getenv()),
+            $this->createTrelloSettingMapByEnv(getenv())
         );
     }
 
@@ -50,7 +57,6 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
      * @param array<string, string> $envValues
      * @return ClickUpSettingMap
      * @throws AssertionFailedException
-     * @throws SettingException
      */
     public function createClickUpSettingMapByEnv(array $envValues): ClickUpSettingMap
     {
@@ -66,6 +72,47 @@ class ApplicationSettingsRepositoryImpl implements ApplicationSettingsRepository
         }
 
         return new ClickUpSettingMap($baseMapValues);
+    }
+
+    /**
+     * @param array<string, string> $envValues
+     * @return TrelloSettingMap
+     * @throws AssertionFailedException
+     */
+    public function createTrelloSettingMapByEnv(array $envValues): TrelloSettingMap
+    {
+        $guildIds = $this->getGuildIdsFromSetting($envValues);
+        $baseMapValues = [];
+
+        foreach ($guildIds as $guildId) {
+            $trelloSetting = new TrelloSetting(
+                TrelloAPIKey::byString($envValues["GUILD_ID_{$guildId}_TRELLO_API_KEY"]),
+                TrelloAPIToken::byString($envValues["GUILD_ID_{$guildId}_TRELLO_API_TOKEN"]),
+                TrelloListId::byString($envValues["GUILD_ID_{$guildId}_TRELLO_LIST_ID"]),
+            );
+            $baseMapValues[$guildId->toString()] = $trelloSetting;
+        }
+
+        return new TrelloSettingMap($baseMapValues);
+    }
+
+    /**
+     * @param array<string, string> $envValues
+     * @return TaskServiceSelectionSettingMap
+     */
+    public function createTaskServiceSelectionSettingMapByEnv(array $envValues): TaskServiceSelectionSettingMap
+    {
+        $guildIds = $this->getGuildIdsFromSetting($envValues);
+        $baseMapValues = [];
+
+        foreach ($guildIds as $guildId) {
+            $taskServiceSelection = TaskServiceSelection::createByString(
+                $envValues["GUILD_ID_{$guildId}_TASK_SERVICE"]
+            );
+            $baseMapValues[$guildId->toString()] = $taskServiceSelection;
+        }
+
+        return new TaskServiceSelectionSettingMap($baseMapValues);
     }
 
     /**

@@ -10,17 +10,19 @@ use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Tumugin\Potapota\Console\Main;
-use Tumugin\Potapota\Domain\Application\ApplicationSettings;
-use Tumugin\Potapota\Domain\Application\ApplicationSettingsRepository;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettings;
+use Tumugin\Potapota\Domain\ApplicationSettings\ApplicationSettingsRepository;
 use Tumugin\Potapota\Domain\ClickUp\ClickUpTaskRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordEventRepository;
 use Tumugin\Potapota\Domain\Discord\DiscordMessageRepository;
 use Tumugin\Potapota\Domain\Discord\MessageEventRepository;
+use Tumugin\Potapota\Domain\Trello\TrelloTaskRepository;
 use Tumugin\Potapota\Infra\ApplicationSettings\Repository\ApplicationSettingsRepositoryImpl;
 use Tumugin\Potapota\Infra\ClickUp\Repository\ClickUpTaskRepositoryImpl;
 use Tumugin\Potapota\Infra\Discord\Repository\DiscordEventRepositoryImpl;
 use Tumugin\Potapota\Infra\Discord\Repository\DiscordMessageRepositoryImpl;
 use Tumugin\Potapota\Infra\Discord\Repository\MessageEventRepositoryImpl;
+use Tumugin\Potapota\Infra\Trello\Repository\TrelloTaskRepositoryImpl;
 use Tumugin\Potapota\Logger\LoggerSettings;
 
 use function DI\autowire;
@@ -52,10 +54,10 @@ class Container
             Discord::class => fn(
                 ApplicationSettings $applicationSettings,
                 LoggerInterface $logger
-            ) => new Discord([
+            ) => getenv('APP_ENV') !== 'test' ? new Discord([
                 'token' => $applicationSettings->discordToken->toString(),
                 'logger' => $logger,
-            ]),
+            ]) : null,
             // Domain
             ApplicationSettings::class => fn(
                 ApplicationSettingsRepository $applicationSettingsRepository
@@ -65,6 +67,7 @@ class Container
             DiscordMessageRepository::class => autowire(DiscordMessageRepositoryImpl::class),
             ApplicationSettingsRepository::class => autowire(ApplicationSettingsRepositoryImpl::class),
             DiscordEventRepository::class => autowire(DiscordEventRepositoryImpl::class),
+            TrelloTaskRepository::class => autowire(TrelloTaskRepositoryImpl::class),
         ];
     }
 }
