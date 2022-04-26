@@ -107,14 +107,10 @@ class MessageEventRepositoryImpl implements MessageEventRepository
             DiscordMessageId::byString($reaction->message_id),
             new DiscordMessageAuthor(
                 DiscordMessageAuthorId::byString(
-                    $message->author?->id ?: throw new PotapotaUnexpectedConditionException(
-                        'message author should not be null.'
-                    )
+                    $message->author?->id ?: '取得失敗'
                 ),
                 DiscordMessageAuthorName::byString(
-                    $message->author->username ?: throw new PotapotaUnexpectedConditionException(
-                        'message author should not be null.'
-                    )
+                    $message->author?->username ?: '取得失敗'
                 ),
             ),
             DiscordAttachmentList::byArray($convertedAttachment->toArray()),

@@ -12,7 +12,8 @@
     "monolog/monolog": "^2.3",
     "bramus/monolog-colored-line-formatter": "^3.0",
     "nesbot/carbon": "^2.56",
-    "sentry/sdk": "^3.1"
+    "sentry/sdk": "^3.1",
+    "guzzlehttp/guzzle": "^7.4"
   },
   "license": "MIT",
   "autoload": {
