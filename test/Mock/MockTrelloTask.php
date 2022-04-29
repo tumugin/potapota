@@ -19,7 +19,7 @@ class MockTrelloTask
             TrelloTaskId::byString('test12345'),
             TrelloTaskName::byString('藍井すずに真剣になる'),
             TrelloTaskDescription::byString('あおいすずちゃん今日もかわいいね'),
-            TrelloTaskDueDate::parse('2022-04-30T19:00:00+09:00') ?: null,
+            TrelloTaskDueDate::parse('2022-04-30T19:00:00+09:00'),
             TrelloTaskUrl::byString('https://example.com/test12345task')
         );
     }
