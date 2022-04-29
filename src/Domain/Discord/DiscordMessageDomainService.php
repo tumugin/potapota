@@ -19,7 +19,7 @@ class DiscordMessageDomainService
                 "ClickUpのタスクを作ったよ～～～！！！\n" .
                 "ClickUpのタスクのタイトルは「{$clickUpTask->clickUpTaskName}」だよ～～～！\n" .
                 ($clickUpTask->clickUpTaskDueDate ?
-                    "ちゃんと{$clickUpTask->clickUpTaskDueDate->formatToShortDate()}までにやらないとあおいすずに怒られるぞ～～\n\n" :
+                    "ちゃんと{$clickUpTask->clickUpTaskDueDate->formatToShortDateJST()}までにやらないとあおいすずに怒られるぞ～～\n\n" :
                     "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n") .
                 "ClickUpタスク: {$clickUpTask->clickUpTaskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
@@ -37,7 +37,7 @@ class DiscordMessageDomainService
                 "Trelloのカードを作ったよ～～～！！！\n" .
                 "Trelloのカードのタイトルは「{$trelloTask->trelloTaskName}」だよ～～～！\n" .
                 ($trelloTask->trelloTaskDueDate ?
-                    "ちゃんと{$trelloTask->trelloTaskDueDate->formatToShortDate()}までにやらないとあおいすずに怒られるぞ～～\n\n" :
+                    "ちゃんと{$trelloTask->trelloTaskDueDate->formatToShortDateJST()}までにやらないとあおいすずに怒られるぞ～～\n\n" :
                     "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n") .
                 "Trelloカード: {$trelloTask->trelloTaskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
