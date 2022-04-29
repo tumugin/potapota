@@ -19,10 +19,10 @@ class DiscordMessageDomainService
         return new DiscordDraftMessage(
             $discordMessage->discordChannelId,
             DiscordMessageContent::byString(
-                "タスクを作ったよ～～～！！！\n" .
-                "タスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
+                "ClickUpのタスクを作ったよ～～～！！！\n" .
+                "ClickUpのタスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
                 "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
-                "ClickUp: {$taskUrl}\n" .
+                "ClickUpタスク: {$taskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
         );
@@ -38,10 +38,10 @@ class DiscordMessageDomainService
         return new DiscordDraftMessage(
             $discordMessage->discordChannelId,
             DiscordMessageContent::byString(
-                "タスクを作ったよ～～～！！！\n" .
-                "タスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
+                "Trelloのカードを作ったよ～～～！！！\n" .
+                "Trelloのカードのタイトルは「{$taskTitle}」だよ～～～！\n" .
                 "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
-                "Trello: {$taskUrl}\n" .
+                "Trelloカード: {$taskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
         );
