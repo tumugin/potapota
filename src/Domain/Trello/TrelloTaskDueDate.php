@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Domain\Trello;
 
-use Carbon\Carbon;
+use Tumugin\Potapota\Domain\BaseTask\BaseTaskDueDate;
 
-class TrelloTaskDueDate extends Carbon
+class TrelloTaskDueDate extends BaseTaskDueDate
 {
 }

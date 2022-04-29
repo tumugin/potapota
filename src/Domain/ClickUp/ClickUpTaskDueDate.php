@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tumugin\Potapota\Domain\ClickUp;
 
-use Carbon\Carbon;
+use Tumugin\Potapota\Domain\BaseTask\BaseTaskDueDate;
 
-class ClickUpTaskDueDate extends Carbon
+class ClickUpTaskDueDate extends BaseTaskDueDate
 {
 }
