@@ -38,7 +38,7 @@ class DiscordMessageDomainServiceTest extends BaseTestCase
         $this->assertSame(
             'ClickUpのタスクを作ったよ～～～！！！
 ClickUpのタスクのタイトルは「藍井すずしか好きじゃないタスク」だよ～～～！
-ちゃんとやらないとあおいすずに怒られるぞ～～
+ちゃんと12/07までにやらないとあおいすずに怒られるぞ～～
 
 ClickUpタスク: https://example.com/test/12345
 元メッセージ: https://discord.com/channels/test_guild_id/test_channel_id/test_message_id',
@@ -58,7 +58,7 @@ ClickUpタスク: https://example.com/test/12345
         $this->assertSame(
             'Trelloのカードを作ったよ～～～！！！
 Trelloのカードのタイトルは「藍井すずに真剣になる」だよ～～～！
-ちゃんとやらないとあおいすずに怒られるぞ～～
+ちゃんと04/30までにやらないとあおいすずに怒られるぞ～～
 
 Trelloカード: https://example.com/test12345task
 元メッセージ: https://discord.com/channels/test_guild_id/test_channel_id/test_message_id',

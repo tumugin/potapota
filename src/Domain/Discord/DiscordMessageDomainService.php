@@ -13,16 +13,15 @@ class DiscordMessageDomainService
         DiscordMessage $discordMessage,
         ClickUpTask $clickUpTask
     ): DiscordDraftMessage {
-        $taskUrl = $clickUpTask->clickUpTaskUrl->toString();
-        $taskTitle = $clickUpTask->clickUpTaskName->toString();
-
         return new DiscordDraftMessage(
             $discordMessage->discordChannelId,
             DiscordMessageContent::byString(
                 "ClickUpのタスクを作ったよ～～～！！！\n" .
-                "ClickUpのタスクのタイトルは「{$taskTitle}」だよ～～～！\n" .
-                "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
-                "ClickUpタスク: {$taskUrl}\n" .
+                "ClickUpのタスクのタイトルは「{$clickUpTask->clickUpTaskName}」だよ～～～！\n" .
+                ($clickUpTask->clickUpTaskDueDate ?
+                    "ちゃんと{$clickUpTask->clickUpTaskDueDate->formatToShortDate()}までにやらないとあおいすずに怒られるぞ～～\n\n" :
+                    "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n") .
+                "ClickUpタスク: {$clickUpTask->clickUpTaskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
         );
@@ -32,16 +31,15 @@ class DiscordMessageDomainService
         DiscordMessage $discordMessage,
         TrelloTask $trelloTask
     ): DiscordDraftMessage {
-        $taskUrl = $trelloTask->trelloTaskUrl->toString();
-        $taskTitle = $trelloTask->trelloTaskName->toString();
-
         return new DiscordDraftMessage(
             $discordMessage->discordChannelId,
             DiscordMessageContent::byString(
                 "Trelloのカードを作ったよ～～～！！！\n" .
-                "Trelloのカードのタイトルは「{$taskTitle}」だよ～～～！\n" .
-                "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n" .
-                "Trelloカード: {$taskUrl}\n" .
+                "Trelloのカードのタイトルは「{$trelloTask->trelloTaskName}」だよ～～～！\n" .
+                ($trelloTask->trelloTaskDueDate ?
+                    "ちゃんと{$trelloTask->trelloTaskDueDate->formatToShortDate()}までにやらないとあおいすずに怒られるぞ～～\n\n" :
+                    "ちゃんとやらないとあおいすずに怒られるぞ～～\n\n") .
+                "Trelloカード: {$trelloTask->trelloTaskUrl}\n" .
                 "元メッセージ: {$discordMessage->getDiscordMessageLinkUrl()}"
             )
         );
